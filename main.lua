@@ -1,4 +1,33 @@
 -- =========================================================
+-- SC ONE W
+-- 
+-- ⚠️ SC INI BUKAN MILIK LU
+-- Dilarang copas, edit, atau klaim sebagai milik sendiri.
+-- Kalau lu dapet SC ini dari orang lain, jangan diakui
+-- sebagai karya lu. Hargai pembuat aslinya.
+-- =========================================================
+
+local __SC_ID = "ONE_W_" .. tostring(os.time()) .. "_" .. tostring(math.random(100000, 999999))
+
+-- Print di console
+print("===========================================")
+print("  SC ONE W")
+print("  ⚠️ SC INI BUKAN MILIK LU")
+print("  Hargai pembuat aslinya.")
+print("  SC ID: " .. __SC_ID)
+print("===========================================")
+
+-- Notif di game
+task.spawn(function()
+    task.wait(2)
+    pcall(function()
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "⚠️ WARNING",
+            Text = "SC ini bukan milik lu. Hargai pembuat aslinya.",
+            Duration = 6
+        })
+    end)
+end)-- =========================================================
 -- ONE W
 -- SECTION 1 : CONFIG + LOADING + STATE
 -- =========================================================
@@ -2556,6 +2585,7 @@ end)
 
 print("[5/15] ESP + Auto Parry (23 ID) + Parry Circle OK")-- =========================================================
 -- SECTION 6 : AIMBOT SENTER + AIMBOT KILLER + FAST VAULT
+-- Instant Lock ke Head
 -- =========================================================
 
 AimbotLaserGui = nil
@@ -2635,23 +2665,29 @@ task.spawn(function()
     end
 end)
 
+-- =========================================================
+-- GET CLOSEST KILLER TARGET - LOCK INSTANT KE HEAD
+-- =========================================================
 function GetClosestKillerTarget()
     local cam = workspace.CurrentCamera
     if not cam then return nil end
     local center = Vector2.new(cam.ViewportSize.X / 2, cam.ViewportSize.Y / 2)
     local closest = nil
     local shortest = 999999
+    
     for _, p in pairs(Players:GetPlayers()) do
         if p ~= LP and p.Character and AimbotSenter_IsKiller(p) then
-            local hrp = p.Character:FindFirstChild(AimbotSenter.LockPart or "Head")
+            -- ⚠️ SELALU LOCK KE HEAD
+            local head = p.Character:FindFirstChild("Head")
             local hum = p.Character:FindFirstChildOfClass("Humanoid")
-            if hrp and hum and hum.Health > 0 then
-                local pos, visible = cam:WorldToViewportPoint(hrp.Position)
-                if visible then
+            
+            if head and hum and hum.Health > 0 then
+                local pos, onScreen = cam:WorldToViewportPoint(head.Position)
+                if onScreen then
                     local dist = (Vector2.new(pos.X, pos.Y) - center).Magnitude
                     if dist < shortest then
                         shortest = dist
-                        closest = hrp
+                        closest = head  -- ⬅️ LANGSUNG HEAD
                     end
                 end
             end
@@ -2660,8 +2696,11 @@ function GetClosestKillerTarget()
     return closest
 end
 
+-- =========================================================
+-- AIMBOT SENTER LOOP - INSTANT LOCK SETIAP FRAME
+-- =========================================================
 task.spawn(function()
-    while task.wait(0.01) do
+    while task.wait() do
         if not AimbotSenter.Enabled then
             AimbotSenter.HoldingSenter = false
             AimbotSenter.CurrentTarget = nil
@@ -2695,10 +2734,14 @@ task.spawn(function()
             continue
         end
         AimbotSenter.CurrentTarget = target
+        
+        -- ⚠️ INSTANT LOCK - LANGSUNG SET CFrame
         local cam = workspace.CurrentCamera
         if cam then
             cam.CFrame = CFrame.new(cam.CFrame.Position, target.Position)
         end
+        
+        -- LASER
         if AimbotSenter.ShowLaser then
             local cam2 = workspace.CurrentCamera
             local screenPoint, onScreen = cam2:WorldToViewportPoint(target.Position)
@@ -2724,7 +2767,9 @@ task.spawn(function()
     end
 end)
 
--- ============ AIMBOT KILLER (AIMLOCK) ============
+-- =========================================================
+-- AIMBOT KILLER (AIMLOCK)
+-- =========================================================
 Aimlock_AttackButtons = Aimlock_AttackButtons or {}
 
 local function isAttackButton(obj)
@@ -2835,7 +2880,9 @@ function Aimlock_StopLoop()
     Aimlock.CurrentTarget = nil
 end
 
--- ============ FAST VAULT ============
+-- =========================================================
+-- FAST VAULT
+-- =========================================================
 FastVaultTracks = {}
 
 local function normalizeId(id)
@@ -2887,7 +2934,7 @@ if LP.Character and FastVault.Enabled then
     pcall(function() hookVault(LP.Character) end)
 end
 
-print("[6/15] Aimbot Senter + Aimbot Killer + Fast Vault OK")-- =========================================================
+print("✅ [6/15] Aimbot Senter (Instant Head Lock) + Aimbot Killer + Fast Vault OK")-- =========================================================
 -- SECTION 7 : GUI UTAMA + TOMBOL W + PANEL + TAB BAR
 -- =========================================================
 
@@ -3841,6 +3888,7 @@ _G.Roooor_makeTab = makeTab
 
 print("[8/15] Komponen UI OK")-- =========================================================
 -- SECTION 9 : TAB SURVIVOR + KILLER + HITBOX + TELEPORT
+-- + AUTO PARRY v1 + AUTO PARRY INSTANT (NO DELAY)
 -- =========================================================
 
 _G.HitboxEsp = _G.HitboxEsp or {
@@ -3857,6 +3905,22 @@ _G.SpoofAttack = _G.SpoofAttack or {
     AttackSpam = false, AttackDelay = 0.15,
 }
 
+-- =========================================================
+-- AUTO PARRY INSTANT CONFIG
+-- =========================================================
+_G.APInstant = _G.APInstant or {
+    Enabled = false,
+    Range = 12,
+    ShowRange = true,
+    RangeThickness = 0.4,
+    RangeYOffset = -2.5,
+}
+
+local AP = _G.APInstant
+
+-- =========================================================
+-- HITBOX ESP
+-- =========================================================
 local HitboxEspObjects = {}
 
 local function CreateHitboxEsp(char, color)
@@ -3965,10 +4029,13 @@ task.spawn(function()
     end
 end)
 
+-- =========================================================
+-- SPOOF ATTACK
+-- =========================================================
 local SpoofHooked = false
 local OriginalNamecall = nil
 
-local function GetClosestSurvivor()
+local function GetClosestSurvivorForSpoof()
     local myRoot = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
     if not myRoot then return nil, math.huge end
     local closest, shortest = nil, math.huge
@@ -4000,7 +4067,7 @@ local function EnableSpoofHook()
             local name = self.Name
             if name == "BasicAttack" or name == "Attack" or name == "Slash"
                 or name == "HitEvent" or name == "AttackEvent" then
-                local target, dist = GetClosestSurvivor()
+                local target, dist = GetClosestSurvivorForSpoof()
                 if target then
                     local spoof = _G.SpoofAttack
                     if not spoof.OnlyWhenClose or dist <= spoof.MaxRealDistance then
@@ -4046,24 +4113,220 @@ task.spawn(function()
     end
 end)
 
+-- =========================================================
+-- AUTO PARRY INSTANT - KILLER ANIMS
+-- =========================================================
+local APInstant_Anims = {}
+for _, id in ipairs({
+    "105374834496520","113255068724446","118907603246885","129784271201071",
+    "117042998468241","122812055447896","78935059863801","74968262036854",
+    "78432063483146","132817836308238","133963973694098","111920872708571",
+    "80411309607666","98163597193511","82666958311998","110355011987939",
+    "139369275981139","135002183282873","121216847022485","130593238885843",
+    "117070354890871","106871536134254","138720291317243",
+    "130819705183003","74796685455129","180435571",
+    "110360975271091","111229698330816","92125118598365",
+    "85030641905220","102055678391920","135181748009911",
+    "88454826739191","135598697094633","115244153053858",
+    "92362656727126","135403091566760","79935565590141",
+    "111223305405046","102746205979822",
+}) do
+    APInstant_Anims["rbxassetid://"..id] = true
+end
+
+local APInstant_Skip = {
+    ["112166042383605"] = true,
+    ["123047897844134"] = true,
+    ["126965695851149"] = true,
+    ["135084204086504"] = true,
+    ["127096285501517"] = true,
+}
+
+local APInstant_Count = 0
+local APInstant_Hooked = {}
+
+local function APInstant_FindBtn()
+    local current = PG
+    for segment in string.gmatch("Survivor-mob.Controls.Gui-mob", "[^%.]+") do
+        current = current and current:FindFirstChild(segment)
+    end
+    if current and current:IsA("GuiObject") and current.Visible then
+        return current
+    end
+    return nil
+end
+
+local function APInstant_Press()
+    if UIS.TouchEnabled then
+        local btn = APInstant_FindBtn()
+        if btn then
+            local pos = btn.AbsolutePosition
+            local size = btn.AbsoluteSize
+            local inset = GuiService:GetGuiInset()
+            local x = pos.X + size.X / 2 + inset.X
+            local y = pos.Y + size.Y / 2 + inset.Y
+            VirtualInputManager:SendTouchEvent(8824, 0, x, y)
+            VirtualInputManager:SendTouchEvent(8824, 2, x, y)
+            return true
+        end
+        return false
+    else
+        VirtualInputManager:SendMouseButtonEvent(0, 0, 1, true, game, 0)
+        VirtualInputManager:SendMouseButtonEvent(0, 0, 1, false, game, 0)
+        return true
+    end
+end
+
+local function APInstant_Hook(char)
+    if APInstant_Hooked[char] then return end
+    APInstant_Hooked[char] = true
+
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if not hum then return end
+    local animator = hum:FindFirstChildOfClass("Animator")
+    if not animator then return end
+
+    animator.AnimationPlayed:Connect(function(track)
+        if not AP.Enabled then return end
+
+        local anim = track.Animation
+        if not anim or not anim.AnimationId then return end
+        local id = anim.AnimationId:match("%d+")
+        if not id then return end
+        local fullId = "rbxassetid://" .. id
+
+        if APInstant_Skip[id] then return end
+        if not APInstant_Anims[fullId] then return end
+        
+        -- CEK JARAK
+        local myRoot = getRoot()
+        if not myRoot then return end
+        local enemyRoot = char:FindFirstChild("HumanoidRootPart")
+        if not enemyRoot then return end
+        
+        local distance = (enemyRoot.Position - myRoot.Position).Magnitude
+        if distance > AP.Range then return end
+        
+        -- INSTANT PARRY - LANGSUNG TANPA DELAY
+        APInstant_Count = APInstant_Count + 1
+        APInstant_Press()
+        print("[AP Instant #" .. APInstant_Count .. "] " .. (anim.Name or "Unknown"))
+    end)
+end
+
 task.spawn(function()
-    while task.wait(0.05) do
-        local spoof = _G.SpoofAttack
-        if not spoof.Enabled or not spoof.AttackSpam then continue end
-        local target = GetClosestSurvivor()
-        if target then
-            pcall(function()
-                local r = ReplicatedStorage:FindFirstChild("Remotes")
-                if r then
-                    local a = r:FindFirstChild("Attacks")
-                    if a then
-                        local atk = a:FindFirstChild("BasicAttack")
-                        if atk then atk:FireServer(false) end
+    while task.wait(0.5) do
+        if AP.Enabled then
+            for _, p in pairs(Players:GetPlayers()) do
+                if p ~= LP and p.Character and p.Team and p.Team.Name == "Killer" then
+                    local hum = p.Character:FindFirstChildOfClass("Humanoid")
+                    if hum and hum.Health > 0 then
+                        APInstant_Hook(p.Character)
                     end
                 end
-            end)
+            end
         end
-        task.wait(spoof.AttackDelay or 0.15)
+    end
+end)
+
+Players.PlayerAdded:Connect(function(p)
+    p.CharacterAdded:Connect(function(c)
+        task.wait(1)
+        if AP.Enabled and p.Team and p.Team.Name == "Killer" then
+            APInstant_Hook(c)
+        end
+    end)
+end)
+
+-- =========================================================
+-- AP INSTANT RANGE VISUAL
+-- =========================================================
+local APInstant_Circle = nil
+local APInstant_Atts = {}
+local APInstant_Beams = {}
+
+local function APInstant_ClearCircle()
+    if APInstant_Circle then APInstant_Circle:Destroy(); APInstant_Circle = nil end
+    APInstant_Atts = {}
+    APInstant_Beams = {}
+end
+
+local function APInstant_CreateCircle()
+    APInstant_ClearCircle()
+    APInstant_Circle = Instance.new("Part")
+    APInstant_Circle.Name = "APInstantRange"
+    APInstant_Circle.Anchored = true
+    APInstant_Circle.CanCollide = false
+    APInstant_Circle.CanQuery = false
+    APInstant_Circle.CanTouch = false
+    APInstant_Circle.Transparency = 1
+    APInstant_Circle.Size = Vector3.new(1, 0.1, 1)
+    APInstant_Circle.Parent = workspace
+
+    for i = 1, 36 do
+        local angle = (i / 36) * math.pi * 2
+        local att = Instance.new("Attachment")
+        att.Position = Vector3.new(math.cos(angle), 0, math.sin(angle))
+        att.Parent = APInstant_Circle
+        table.insert(APInstant_Atts, att)
+    end
+    for i = 1, 36 do
+        local attA = APInstant_Atts[i]
+        local attB = APInstant_Atts[(i % 36) + 1]
+        local beam = Instance.new("Beam")
+        beam.Attachment0 = attA
+        beam.Attachment1 = attB
+        beam.Width0 = AP.RangeThickness
+        beam.Width1 = AP.RangeThickness
+        beam.FaceCamera = true
+        beam.LightEmission = 1
+        beam.LightInfluence = 0
+        beam.Segments = 1
+        beam.Transparency = NumberSequence.new(0)
+        beam.Color = ColorSequence.new(Color3.fromRGB(255, 210, 80))
+        beam.Parent = APInstant_Circle
+        table.insert(APInstant_Beams, beam)
+    end
+end
+
+RunService.RenderStepped:Connect(function()
+    if not AP.Enabled or not AP.ShowRange then
+        if APInstant_Circle then APInstant_ClearCircle() end
+        return
+    end
+    
+    local root = getRoot()
+    if not root then
+        if APInstant_Circle then APInstant_ClearCircle() end
+        return
+    end
+    
+    if not APInstant_Circle or not APInstant_Circle.Parent then
+        APInstant_CreateCircle()
+    end
+    
+    local radius = AP.Range
+    local myPos = root.Position
+    local killerInside = false
+    
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= LP and p.Character and p.Team and p.Team.Name == "Killer" then
+            local eRoot = p.Character:FindFirstChild("HumanoidRootPart")
+            if eRoot and (eRoot.Position - myPos).Magnitude <= radius then
+                killerInside = true
+                break
+            end
+        end
+    end
+    
+    local color = killerInside and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(255, 210, 80)
+    APInstant_Circle.Position = Vector3.new(myPos.X, myPos.Y + AP.RangeYOffset, myPos.Z)
+    for i, att in ipairs(APInstant_Atts) do
+        local angle = (i / 36) * math.pi * 2
+        att.Position = Vector3.new(math.cos(angle) * radius, 0, math.sin(angle) * radius)
+    end
+    for _, beam in ipairs(APInstant_Beams) do
+        beam.Color = ColorSequence.new(color)
     end
 end)
 
@@ -4071,6 +4334,7 @@ end)
 -- TAB 1: SURVIVOR
 -- =========================================================
 makeTab("Survivor", "🏃", 1, function()
+    -- ===== AUTO PARRY v1 =====
     sec("Auto Parry", "🛡️")
     tog("Enable Auto Parry", false, function(s)
         AutoParry.Enabled = s
@@ -4102,6 +4366,33 @@ makeTab("Survivor", "🏃", 1, function()
         AP_parryCount = 0
     end)
 
+    -- ===== AUTO PARRY INSTANT =====
+    sec("⚡ Instant Parry", "⚡")
+    tog("Enable Instant Parry", false, function(s)
+        AP.Enabled = s
+        if s then
+            for _, p in pairs(Players:GetPlayers()) do
+                if p ~= LP and p.Character and p.Team and p.Team.Name == "Killer" then
+                    task.spawn(function() APInstant_Hook(p.Character) end)
+                end
+            end
+        end
+    end)
+    tog("Show Instant Range", true, function(s)
+        AP.ShowRange = s
+        if not s and APInstant_Circle then APInstant_ClearCircle() end
+    end)
+    sl("Instant Range", 5, 40, 12, function(v)
+        AP.Range = v
+    end)
+    sl("Instant Thickness (x100)", 1, 50, 40, function(v)
+        AP.RangeThickness = v / 100
+    end)
+    sl("Instant Y Offset", -10, 5, -2, function(v)
+        AP.RangeYOffset = v
+    end)
+
+    -- ===== ESP Circle Parry =====
     sec("ESP Circle Parry", "⭕")
     tog("Show Circle", false, function(s)
         if AP_ESPCircle then
@@ -4137,6 +4428,7 @@ makeTab("Survivor", "🏃", 1, function()
         if AP_ESPCircle then AP_ESPCircle.ColorDanger = c end
     end)
 
+    -- ===== Auto Skill Check =====
     sec("Auto Skill Check", "⚡")
     tog("Enable Auto Skill Check", false, function(s)
         SkillCheck.Enabled = s
@@ -4183,19 +4475,13 @@ makeTab("Survivor", "🏃", 1, function()
         FastVault.Speed = v
     end)
 
-    sec("Auto Escape", "🚪")
-    tog("Enable Auto Escape", false, function(s) S.AutoEscapeGate = s end)
-    tog("Killer Deket", true, function(s) S.AutoEscapeUseKillerCheck = s end)
-    tog("Generator Cukup", true, function(s) S.AutoEscapeUseGenCheck = s end)
-    sl("Killer Range", 10, 150, 50, function(v) S.AutoEscapeRange = v end)
-
     sec("Support", "💊")
     tog("Instant Interact", false, function(s) S.InstantInteract = s end)
 
     sec("Teleport", "🌀")
     btn("TP Finish Line", function() teleportToFinishLine() end)
 end, function()
-    -- TELEPORT MENU (Kolom Kanan)
+    -- TELEPORT MENU (KOLOM KANAN)
     sec("Teleport Menu", "🌀", rightScroll)
 
     local TP = _G.Teleport or { OffsetY = 5, FrontDistance = 4, Mode = "Random", Notify = true }
@@ -4460,7 +4746,7 @@ end, function()
     end, rightScroll)
 end)
 
-print("[9/15] Tab Survivor + Killer + Hitbox + Teleport Menu OK")-- =========================================================
+print("✅ [9/15] Survivor + Killer + Hitbox + Teleport + Auto Parry v1 + Instant OK")-- =========================================================
 -- SECTION 10 : TAB ESP + FIRE + MUSIK
 -- =========================================================
 
