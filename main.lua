@@ -1,11 +1,7 @@
 -- =========================================================
--- ONE W v4 - GOLD PREMIUM HUB + MUSIC
--- FULL REWRITE - ALL PATCHES APPLIED
--- THEME: DIAMOND BLUE (BIRU KINCLONG)
--- =========================================================
-
--- =========================================================
--- SECTION 1/15 : LOADING + CONFIG + STATE
+-- ONE W v6 FINAL - LENGKAP + KILL FOG
+-- SECTION 1/15 : CONFIG + LOADING + STATE
+-- 32 LAGU + CROSSHAIR 10 STYLE
 -- =========================================================
 
 Players = game:GetService("Players")
@@ -24,7 +20,6 @@ TeleportService = game:GetService("TeleportService")
 LP = Players.LocalPlayer
 PG = LP:WaitForChild("PlayerGui")
 
--- GAMBAR ID YANG DIPAKAI
 IMAGE_ID = "rbxassetid://138040631725974"
 STUN_SOUND_ID = "rbxassetid://131869004949152"
 STUN_ANIM_ID = "123047897844134"
@@ -35,36 +30,26 @@ function getRoot()
     return c and c:FindFirstChild("HumanoidRootPart")
 end
 
--- =========================================================
--- THEME: DIAMOND BLUE (BIRU KINCLONG)
--- =========================================================
 C = {
-    -- BACKGROUND (BIRU DIAMOND)
-    BG = Color3.fromRGB(10, 20, 45),          -- background panel utama (biru tua)
-    BG2 = Color3.fromRGB(15, 30, 65),         -- background kolom kiri-kanan
-    PANEL = Color3.fromRGB(20, 45, 95),       -- panel header
-    PANEL2 = Color3.fromRGB(30, 60, 130),     -- panel tombol
-    
-    -- AKSEN GOLD (tetap, biar kontras sama biru)
+    BG = Color3.fromRGB(10, 20, 45),
+    BG2 = Color3.fromRGB(15, 30, 65),
+    PANEL = Color3.fromRGB(20, 45, 95),
+    PANEL2 = Color3.fromRGB(30, 60, 130),
     GOLD = Color3.fromRGB(255, 210, 80),
     GOLD_LIGHT = Color3.fromRGB(255, 230, 120),
     GOLD_DARK = Color3.fromRGB(200, 160, 50),
     ORANGE = Color3.fromRGB(255, 180, 60),
-    
-    -- TEXT
-    TXT = Color3.fromRGB(230, 245, 255),      -- text putih kebiruan
-    DIM = Color3.fromRGB(150, 190, 230),      -- text dim biru muda
-    
-    -- STATUS
+    TXT = Color3.fromRGB(230, 245, 255),
+    DIM = Color3.fromRGB(150, 190, 230),
     GRN = Color3.fromRGB(80, 255, 150),
     RED = Color3.fromRGB(255, 70, 100),
-    CYAN = Color3.fromRGB(120, 220, 255),     -- aksen biru kinclong
+    CYAN = Color3.fromRGB(120, 220, 255),
 }
 
--- WARNA BIRU DIAMOND UNTUK SHIMMER
 DIAMOND_BLUE = Color3.fromRGB(120, 200, 255)
 DIAMOND_LIGHT = Color3.fromRGB(180, 230, 255)
 DIAMOND_DARK = Color3.fromRGB(40, 100, 180)
+DIAMOND_MID = Color3.fromRGB(80, 160, 240)
 
 function rnd(o, r)
     local c = Instance.new("UICorner")
@@ -99,9 +84,7 @@ function playToggleSound()
     end)
 end
 
--- =========================================================
--- LOADING SCREEN BARU (BIRU DIAMOND + GAMBAR ID LU + SHIMMER)
--- =========================================================
+-- ============ LOADING SCREEN ============
 local loadingGui = Instance.new("ScreenGui")
 loadingGui.Name = "OneWLoading"
 loadingGui.ResetOnSpawn = false
@@ -109,14 +92,12 @@ loadingGui.IgnoreGuiInset = true
 loadingGui.DisplayOrder = 999999
 loadingGui.Parent = PG
 
--- BACKGROUND BIRU DIAMOND
 local bg = Instance.new("Frame")
 bg.Size = UDim2.new(1, 0, 1, 0)
 bg.BackgroundColor3 = Color3.fromRGB(5, 12, 30)
 bg.BorderSizePixel = 0
 bg.Parent = loadingGui
 
--- GRADIENT BIRU BERGERAK (KINCLONG)
 local bgGradient = Instance.new("UIGradient")
 bgGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0.0, Color3.fromRGB(10, 25, 60)),
@@ -137,9 +118,7 @@ task.spawn(function()
     end
 end)
 
--- SHIMMER EFFECT (KILAU BERGERAK DI BACKGROUND)
 local bgShimmer = Instance.new("ImageLabel")
-bgShimmer.Name = "LoadingShimmer"
 bgShimmer.Size = UDim2.new(0, 400, 1.5, 0)
 bgShimmer.Position = UDim2.new(0, -400, 0, 0)
 bgShimmer.BackgroundTransparency = 1
@@ -159,7 +138,6 @@ task.spawn(function()
     end
 end)
 
--- GLOW DI BELAKANG GAMBAR
 local logoGlow = Instance.new("ImageLabel")
 logoGlow.Size = UDim2.new(0, 220, 0, 220)
 logoGlow.Position = UDim2.new(0.5, -110, 0.32, -110)
@@ -170,7 +148,6 @@ logoGlow.ImageTransparency = 1
 logoGlow.ZIndex = 2
 logoGlow.Parent = bg
 
--- GAMBAR ID LU DI TENGAH
 local logoLoading = Instance.new("ImageLabel")
 logoLoading.Size = UDim2.new(0, 140, 0, 140)
 logoLoading.Position = UDim2.new(0.5, -70, 0.32, -70)
@@ -181,27 +158,10 @@ logoLoading.ZIndex = 3
 logoLoading.Parent = bg
 
 task.delay(0.3, function()
-    TweenService:Create(logoLoading, TweenInfo.new(0.8, Enum.EasingStyle.Back), {
-        ImageTransparency = 0
-    }):Play()
-    TweenService:Create(logoGlow, TweenInfo.new(0.8), {
-        ImageTransparency = 0.5
-    }):Play()
+    TweenService:Create(logoLoading, TweenInfo.new(0.8, Enum.EasingStyle.Back), {ImageTransparency = 0}):Play()
+    TweenService:Create(logoGlow, TweenInfo.new(0.8), {ImageTransparency = 0.5}):Play()
 end)
 
--- GLOW PULSE
-task.spawn(function()
-    local t = 0
-    while logoGlow.Parent do
-        t = t + 0.05
-        local sz = 220 + math.sin(t * 2) * 20
-        logoGlow.Size = UDim2.new(0, sz, 0, sz)
-        logoGlow.Position = UDim2.new(0.5, -sz / 2, 0.32, -sz / 2)
-        task.wait(0.05)
-    end
-end)
-
--- TULISAN "ONE W"
 local welcomeTitle = Instance.new("TextLabel")
 welcomeTitle.Size = UDim2.new(1, 0, 0, 60)
 welcomeTitle.Position = UDim2.new(0, 0, 0.52, 0)
@@ -215,28 +175,8 @@ welcomeTitle.TextStrokeColor3 = Color3.fromRGB(120, 200, 255)
 welcomeTitle.ZIndex = 3
 welcomeTitle.Parent = bg
 
-local titleGrad = Instance.new("UIGradient")
-titleGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.0, Color3.fromRGB(180, 230, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(120, 200, 255)),
-    ColorSequenceKeypoint.new(1.0, Color3.fromRGB(180, 230, 255)),
-})
-titleGrad.Parent = welcomeTitle
+TweenService:Create(welcomeTitle, TweenInfo.new(1.2, Enum.EasingStyle.Back), {TextSize = 52}):Play()
 
-task.spawn(function()
-    local t = 0
-    while welcomeTitle.Parent do
-        t = t + 1
-        titleGrad.Rotation = (t * 2) % 360
-        task.wait(0.08)
-    end
-end)
-
-TweenService:Create(welcomeTitle, TweenInfo.new(1.2, Enum.EasingStyle.Back), {
-    TextSize = 52, TextTransparency = 0
-}):Play()
-
--- SUBTITLE
 local subtitle = Instance.new("TextLabel")
 subtitle.Size = UDim2.new(1, 0, 0, 24)
 subtitle.Position = UDim2.new(0, 0, 0.60, 0)
@@ -247,13 +187,9 @@ subtitle.TextSize = 14
 subtitle.Font = Enum.Font.GothamBold
 subtitle.TextStrokeTransparency = 0.5
 subtitle.TextStrokeColor3 = Color3.fromRGB(20, 60, 120)
-subtitle.TextTransparency = 1
 subtitle.ZIndex = 3
 subtitle.Parent = bg
 
-TweenService:Create(subtitle, TweenInfo.new(1), {TextTransparency = 0}):Play()
-
--- PROGRESS BAR
 local barBg = Instance.new("Frame")
 barBg.Size = UDim2.new(0, 320, 0, 4)
 barBg.Position = UDim2.new(0.5, -160, 0.68, 0)
@@ -264,12 +200,6 @@ barBg.ZIndex = 3
 barBg.Parent = bg
 rnd(barBg, 999)
 
-local barStroke = Instance.new("UIStroke")
-barStroke.Color = Color3.fromRGB(120, 200, 255)
-barStroke.Thickness = 1
-barStroke.Transparency = 0.3
-barStroke.Parent = barBg
-
 local barFill = Instance.new("Frame")
 barFill.Size = UDim2.new(0, 0, 1, 0)
 barFill.BackgroundColor3 = Color3.fromRGB(120, 200, 255)
@@ -277,41 +207,13 @@ barFill.BorderSizePixel = 0
 barFill.Parent = barBg
 rnd(barFill, 999)
 
-local barFillGrad = Instance.new("UIGradient")
-barFillGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(180, 230, 255)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(120, 200, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(60, 140, 220)),
-})
-barFillGrad.Parent = barFill
+TweenService:Create(barFill, TweenInfo.new(1.4, Enum.EasingStyle.Quad), {Size = UDim2.new(1, 0, 1, 0)}):Play()
 
-TweenService:Create(barFill, TweenInfo.new(1.4, Enum.EasingStyle.Quad), {
-    Size = UDim2.new(1, 0, 1, 0)
-}):Play()
-
--- CLEANUP LOADING
 task.delay(1.6, function()
-    if not loadingGui then return end
-    TweenService:Create(bg, TweenInfo.new(0.6), {BackgroundTransparency = 1}):Play()
-    TweenService:Create(welcomeTitle, TweenInfo.new(0.5), {TextTransparency = 1, TextStrokeTransparency = 1}):Play()
-    TweenService:Create(subtitle, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
-    TweenService:Create(barBg, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
-    if logoLoading then
-        TweenService:Create(logoLoading, TweenInfo.new(0.5), {ImageTransparency = 1}):Play()
-    end
-    if logoGlow then
-        TweenService:Create(logoGlow, TweenInfo.new(0.5), {ImageTransparency = 1}):Play()
-    end
-    if bgShimmer then
-        TweenService:Create(bgShimmer, TweenInfo.new(0.5), {ImageTransparency = 1}):Play()
-    end
-    task.wait(0.8)
     if loadingGui then loadingGui:Destroy() end
 end)
 
--- =========================================================
--- STATE (SEMUA FITUR ASLI LU - TETAP UTUH)
--- =========================================================
+-- ============ STATE ============
 _G.RoooorS = _G.RoooorS or {
     FireOn = false, FireType = "CosmicFire", FireSize = 5,
     WalkSpeed = false, WalkSpeedVal = 16,
@@ -325,16 +227,21 @@ _G.RoooorS = _G.RoooorS or {
     KillEffect = false,
     Crosshair = false, CrosshairColor = Color3.fromRGB(255, 210, 80),
     CrosshairSize = 8, CrosshairThickness = 2,
+    CrosshairStyle = "Plus", CrosshairGap = 4,
+    CrosshairShowOutline = true,
+    CrosshairOutlineColor = Color3.fromRGB(0, 0, 0),
     CrosshairOffsetX = 0, CrosshairOffsetY = 0,
     ZoomOut = false, ZoomOutValue = 500,
     FOV = 90, FOVEnabled = false,
-    Fullbright = false, FullbrightVal = 50,
+    Fullbright = false, FullbrightVal = 200,
+    ClockTime = 14, CustomBrightness = 200,
     NoFog = false, UltraHD = false,
     Contrast = false, ContrastVal = 0.3, SaturationVal = 0.2,
     SkyId = "Default",
     NoScreenEffects = false, LowGraphics = false, CleanSky = false,
     HDSky = false,
-    AntiAFK = false, ShowFPS = false, ShowPing = false,
+    KillFog = true,
+    AntiAFK = false, ShowFPS = true, ShowPing = true,
     Killer_AutoAtk = false, Killer_AtkDelay = 0.35,
     Killer_KillAll = false, MaskedPower = "Cobra",
     InstantInteract = false,
@@ -434,9 +341,7 @@ StunIndicator = _G.Roooor_StunIndicator or {
 }
 _G.Roooor_StunIndicator = StunIndicator
 
--- =========================================================
--- PLAYLIST MUSIC (SEMUA LAGU LU - TETAP UTUH)
--- =========================================================
+-- ============ BOMBAX PLAYLIST (32 LAGU) ============
 Bombax = _G.Roooor_Bombax or {
     DaftarLagu = {
         {id = "101985596918228", judul = "One"},
@@ -463,19 +368,56 @@ Bombax = _G.Roooor_Bombax or {
         {id = "126810420971446", judul = "Anak Kota"},
         {id = "94299109467073",  judul = "Cinderella Jedag Jedug"},
         {id = "83463789936127",  judul = "Lagu Jawa (Kowe Siji)"},
+        {id = "771523191444498", judul = "Cintaku Ini Istimewa - AIS x Celawze"},
+        {id = "86422417888834",  judul = "Kini Tinggal Kenangan - Celawze"},
+        {id = "70868757792328",  judul = "Mashup Dora Dora (Funky RMX)"},
+        {id = "128071048140468", judul = "Always Loving You - Natraa"},
+        {id = "136239433509180", judul = "Mysterious Girl (Funky RMX)"},
+        {id = "101280279977761", judul = "Kini Kita Pe Kisah - DJ Pelik Pungki"},
+        {id = "117080961502380", judul = "DJ Music Dubstep x Bangun Tidur Selfie"},
+        {id = "110337096446518", judul = "DJ Onia"},
     },
     Volume = 0.5, Pitch = 1,
 }
 _G.Roooor_Bombax = Bombax
 
+-- ============ AUTO KILL FOG ============
+Lighting.FogEnd = 1000000
+Lighting.FogStart = 1000000
+Lighting.FogColor = Color3.fromRGB(255, 255, 255)
+for _, v in pairs(Lighting:GetChildren()) do
+    if v:IsA("Atmosphere") then
+        v.Density = 0
+        v.Haze = 0
+        v.Glare = 0
+        v.Offset = 0
+    end
+end
+
+task.spawn(function()
+    while task.wait(0.5) do
+        if S.KillFog then
+            if Lighting.FogEnd < 100000 then
+                Lighting.FogEnd = 1000000
+                Lighting.FogStart = 1000000
+            end
+            for _, v in pairs(Lighting:GetChildren()) do
+                if v:IsA("Atmosphere") and v.Density > 0 then
+                    v.Density = 0
+                    v.Haze = 0
+                    v.Glare = 0
+                end
+            end
+        end
+    end
+end)
+
 print("✅ [1/15] Loading + Config + State Loaded")
-print("   Theme: DIAMOND BLUE")
-print("   Playlist Music: " .. #Bombax.DaftarLagu .. " lagu")-- =========================================================
+print("   - 32 lagu")
+print("   - Kill Fog: ON")-- =========================================================
 -- SECTION 2/15 : FIRE + SKY + KILLERANIMS + SKIPANIMS + GRAFIK
--- THEME: DIAMOND BLUE
 -- =========================================================
 
--- ============ FIRE LIST (60 efek) ============
 FireList = {
     "Classic","HellFire","IceFire","ToxicFire","VoidFire",
     "GoldenKing","SakuraFire","EmeraldFire","BloodFire","ShadowFire",
@@ -560,7 +502,6 @@ for _, name in ipairs(FireList) do
     end
 end
 
--- ============ SKY LIST (18) ============
 SkyList = {
     "Default", "Sunset", "Night", "Space",
     "Alien", "Purple", "Galaxy", "Void",
@@ -589,7 +530,6 @@ SkyIds = {
     DeepSpace = { Bk = "rbxassetid://17817511804", Dn = "rbxassetid://17817520184", Ft = "rbxassetid://17817511804", Lf = "rbxassetid://17817511804", Rt = "rbxassetid://17817511804", Up = "rbxassetid://17817511804" },
 }
 
--- ============ KILLERANIMS (23 ID) ============
 KillerAnims = {}
 for _, id in ipairs({
     "105374834496520","113255068724446","118907603246885","129784271201071",
@@ -602,7 +542,6 @@ for _, id in ipairs({
     KillerAnims["rbxassetid://"..id] = true
 end
 
--- ============ SKIPANIMS ============
 SkipAnims = {
     ["112166042383605"] = "Break Pallet",
     ["123047897844134"] = "Stun",
@@ -611,31 +550,16 @@ SkipAnims = {
     ["127096285501517"] = "Parry Anim",
 }
 
--- ============ GRAFIK PRESETS (16) ============
 GraphicPresets = {
     ["Soft"] = { Brightness = 2.00, Exposure = 0.03, ShadowSoftness = 0.075, Ambient = Color3.fromRGB(42,45,52), OutdoorAmbient = Color3.fromRGB(130,138,155), AtmosphereDensity = 0.055, AtmosphereHaze = 0.025, AtmosphereGlare = 0.08, BloomIntensity = 0.12, BloomSize = 20, BloomThreshold = 0.96, Contrast = 0.18, Saturation = 0.08, ColorBrightness = 0.01, SunRaysIntensity = 0.06, SunRaysSpread = 0.75, DOFNear = 0.01, DOFFar = 0.02, DOFFocus = 45, DOFRadius = 40 },
     ["Cinematic"] = { Brightness = 2.10, Exposure = 0.05, ShadowSoftness = 0.055, Ambient = Color3.fromRGB(32,35,42), OutdoorAmbient = Color3.fromRGB(125,132,150), AtmosphereDensity = 0.075, AtmosphereHaze = 0.045, AtmosphereGlare = 0.12, BloomIntensity = 0.18, BloomSize = 24, BloomThreshold = 0.92, Contrast = 0.24, Saturation = 0.10, ColorBrightness = 0.015, SunRaysIntensity = 0.085, SunRaysSpread = 0.72, DOFNear = 0.025, DOFFar = 0.045, DOFFocus = 45, DOFRadius = 35 },
     ["Ultra Cinematic"] = { Brightness = 2.15, Exposure = 0.07, ShadowSoftness = 0.045, Ambient = Color3.fromRGB(30,32,40), OutdoorAmbient = Color3.fromRGB(135,142,160), AtmosphereDensity = 0.065, AtmosphereHaze = 0.035, AtmosphereGlare = 0.14, BloomIntensity = 0.22, BloomSize = 27, BloomThreshold = 0.89, Contrast = 0.27, Saturation = 0.13, ColorBrightness = 0.02, SunRaysIntensity = 0.10, SunRaysSpread = 0.70, DOFNear = 0.02, DOFFar = 0.04, DOFFocus = 44, DOFRadius = 34 },
     ["Golden Hour"] = { Brightness = 2.20, Exposure = 0.08, ShadowSoftness = 0.065, Ambient = Color3.fromRGB(58,48,38), OutdoorAmbient = Color3.fromRGB(155,135,105), AtmosphereDensity = 0.07, AtmosphereHaze = 0.055, AtmosphereGlare = 0.16, BloomIntensity = 0.20, BloomSize = 26, BloomThreshold = 0.91, Contrast = 0.20, Saturation = 0.16, ColorBrightness = 0.025, SunRaysIntensity = 0.12, SunRaysSpread = 0.76, DOFNear = 0.015, DOFFar = 0.035, DOFFocus = 45, DOFRadius = 38 },
     ["Night Cinema"] = { Brightness = 1.65, Exposure = -0.02, ShadowSoftness = 0.035, Ambient = Color3.fromRGB(20,25,38), OutdoorAmbient = Color3.fromRGB(65,78,110), AtmosphereDensity = 0.085, AtmosphereHaze = 0.065, AtmosphereGlare = 0.06, BloomIntensity = 0.15, BloomSize = 24, BloomThreshold = 0.86, Contrast = 0.30, Saturation = 0.08, ColorBrightness = -0.01, SunRaysIntensity = 0.04, SunRaysSpread = 0.70, DOFNear = 0.025, DOFFar = 0.05, DOFFocus = 48, DOFRadius = 32 },
-    ["Deep Shadow"] = { Brightness = 1.90, Exposure = 0.00, ShadowSoftness = 0.035, Ambient = Color3.fromRGB(25,28,35), OutdoorAmbient = Color3.fromRGB(105,112,130), AtmosphereDensity = 0.07, AtmosphereHaze = 0.04, AtmosphereGlare = 0.08, BloomIntensity = 0.14, BloomSize = 22, BloomThreshold = 0.94, Contrast = 0.30, Saturation = 0.08, ColorBrightness = 0.005, SunRaysIntensity = 0.07, SunRaysSpread = 0.74, DOFNear = 0.02, DOFFar = 0.035, DOFFocus = 48, DOFRadius = 34 },
-    ["Crystal"] = { Brightness = 2.35, Exposure = 0.10, ShadowSoftness = 0.065, Ambient = Color3.fromRGB(48,52,60), OutdoorAmbient = Color3.fromRGB(150,158,175), AtmosphereDensity = 0.035, AtmosphereHaze = 0.018, AtmosphereGlare = 0.10, BloomIntensity = 0.10, BloomSize = 18, BloomThreshold = 1.00, Contrast = 0.15, Saturation = 0.05, ColorBrightness = 0.025, SunRaysIntensity = 0.055, SunRaysSpread = 0.78, DOFNear = 0.01, DOFFar = 0.025, DOFFocus = 46, DOFRadius = 42 },
-    ["Dreamy"] = { Brightness = 2.10, Exposure = 0.06, ShadowSoftness = 0.09, Ambient = Color3.fromRGB(50,48,58), OutdoorAmbient = Color3.fromRGB(140,135,155), AtmosphereDensity = 0.10, AtmosphereHaze = 0.08, AtmosphereGlare = 0.13, BloomIntensity = 0.25, BloomSize = 30, BloomThreshold = 0.88, Contrast = 0.12, Saturation = 0.10, ColorBrightness = 0.025, SunRaysIntensity = 0.08, SunRaysSpread = 0.80, DOFNear = 0.03, DOFFar = 0.055, DOFFocus = 44, DOFRadius = 45 },
-    ["Vivid Cinema"] = { Brightness = 2.20, Exposure = 0.06, ShadowSoftness = 0.055, Ambient = Color3.fromRGB(35,40,45), OutdoorAmbient = Color3.fromRGB(135,145,160), AtmosphereDensity = 0.055, AtmosphereHaze = 0.025, AtmosphereGlare = 0.10, BloomIntensity = 0.18, BloomSize = 23, BloomThreshold = 0.91, Contrast = 0.28, Saturation = 0.22, ColorBrightness = 0.015, SunRaysIntensity = 0.09, SunRaysSpread = 0.73, DOFNear = 0.015, DOFFar = 0.035, DOFFocus = 45, DOFRadius = 36 },
-    ["Dark Cinema"] = { Brightness = 1.80, Exposure = -0.03, ShadowSoftness = 0.04, Ambient = Color3.fromRGB(18,20,26), OutdoorAmbient = Color3.fromRGB(88,92,110), AtmosphereDensity = 0.075, AtmosphereHaze = 0.05, AtmosphereGlare = 0.05, BloomIntensity = 0.12, BloomSize = 21, BloomThreshold = 0.95, Contrast = 0.34, Saturation = 0.04, ColorBrightness = -0.005, SunRaysIntensity = 0.04, SunRaysSpread = 0.70, DOFNear = 0.025, DOFFar = 0.045, DOFFocus = 48, DOFRadius = 30 },
-    ["Cloudy Soft"] = { Brightness = 2.00, Exposure = 0.02, ShadowSoftness = 0.10, Ambient = Color3.fromRGB(55,58,65), OutdoorAmbient = Color3.fromRGB(145,148,158), AtmosphereDensity = 0.11, AtmosphereHaze = 0.09, AtmosphereGlare = 0.07, BloomIntensity = 0.10, BloomSize = 20, BloomThreshold = 0.97, Contrast = 0.10, Saturation = 0.03, ColorBrightness = 0.01, SunRaysIntensity = 0.035, SunRaysSpread = 0.82, DOFNear = 0.025, DOFFar = 0.05, DOFFocus = 46, DOFRadius = 43 },
-    ["Film Look"] = { Brightness = 2.05, Exposure = 0.03, ShadowSoftness = 0.06, Ambient = Color3.fromRGB(40,40,42), OutdoorAmbient = Color3.fromRGB(125,125,130), AtmosphereDensity = 0.06, AtmosphereHaze = 0.035, AtmosphereGlare = 0.08, BloomIntensity = 0.09, BloomSize = 19, BloomThreshold = 0.98, Contrast = 0.30, Saturation = -0.02, ColorBrightness = 0.005, SunRaysIntensity = 0.065, SunRaysSpread = 0.74, DOFNear = 0.02, DOFFar = 0.04, DOFFocus = 45, DOFRadius = 37 },
-    ["Moonlight"] = { Brightness = 1.70, Exposure = -0.01, ShadowSoftness = 0.03, Ambient = Color3.fromRGB(22,28,45), OutdoorAmbient = Color3.fromRGB(70,88,125), AtmosphereDensity = 0.09, AtmosphereHaze = 0.07, AtmosphereGlare = 0.04, BloomIntensity = 0.17, BloomSize = 25, BloomThreshold = 0.85, Contrast = 0.25, Saturation = 0.06, ColorBrightness = 0.00, SunRaysIntensity = 0.03, SunRaysSpread = 0.68, DOFNear = 0.02, DOFFar = 0.045, DOFFocus = 49, DOFRadius = 34 },
-    ["Bright Cinema"] = { Brightness = 2.45, Exposure = 0.12, ShadowSoftness = 0.07, Ambient = Color3.fromRGB(52,55,62), OutdoorAmbient = Color3.fromRGB(165,170,185), AtmosphereDensity = 0.045, AtmosphereHaze = 0.025, AtmosphereGlare = 0.14, BloomIntensity = 0.16, BloomSize = 23, BloomThreshold = 0.95, Contrast = 0.18, Saturation = 0.09, ColorBrightness = 0.035, SunRaysIntensity = 0.10, SunRaysSpread = 0.78, DOFNear = 0.01, DOFFar = 0.025, DOFFocus = 45, DOFRadius = 40 },
-    ["Ultra Soft"] = { Brightness = 2.05, Exposure = 0.04, ShadowSoftness = 0.12, Ambient = Color3.fromRGB(58,60,68), OutdoorAmbient = Color3.fromRGB(145,148,160), AtmosphereDensity = 0.08, AtmosphereHaze = 0.065, AtmosphereGlare = 0.08, BloomIntensity = 0.08, BloomSize = 18, BloomThreshold = 1.00, Contrast = 0.08, Saturation = 0.04, ColorBrightness = 0.015, SunRaysIntensity = 0.045, SunRaysSpread = 0.82, DOFNear = 0.025, DOFFar = 0.055, DOFFocus = 45, DOFRadius = 46 },
-    ["Performance Cinema"] = { Brightness = 2.00, Exposure = 0.03, ShadowSoftness = 0.08, Ambient = Color3.fromRGB(40,43,50), OutdoorAmbient = Color3.fromRGB(125,132,148), AtmosphereDensity = 0.04, AtmosphereHaze = 0.02, AtmosphereGlare = 0.05, BloomIntensity = 0.07, BloomSize = 16, BloomThreshold = 1.00, Contrast = 0.14, Saturation = 0.06, ColorBrightness = 0.01, SunRaysIntensity = 0.035, SunRaysSpread = 0.75, DOFNear = 0, DOFFar = 0, DOFFocus = 45, DOFRadius = 30 },
 }
 
 GraphicPresetOrder = {
     "Soft","Cinematic","Ultra Cinematic","Golden Hour","Night Cinema",
-    "Deep Shadow","Crystal","Dreamy","Vivid Cinema","Dark Cinema",
-    "Cloudy Soft","Film Look","Moonlight","Bright Cinema","Ultra Soft",
-    "Performance Cinema",
 }
 
 GraphicState = _G.Roooor_GraphicState or {
@@ -666,9 +590,7 @@ SharpBackup = {
     CreatedEffects = {},
 }
 
-print("✅ [2/15] Fire + Sky + KillerAnims + SkipAnims + Grafik Presets Loaded")
-print("   Theme: DIAMOND BLUE")
-print("   Fire: 60 | Sky: 18 | KillerAnims: 23 ID | Grafik: 16 preset")-- =========================================================
+print("✅ [2/15] Fire + Sky + KillerAnims + SkipAnims + Grafik Presets Loaded")-- =========================================================
 -- SECTION 3/15 : BOMBAX MUSIC PLAYER - THEME DIAMOND BLUE
 -- =========================================================
 
@@ -701,7 +623,6 @@ bombaxGui.DisplayOrder = 99998
 bombaxGui.Parent = PG
 _G.Roooor_BombaxGui = bombaxGui
 
--- FRAME UTAMA (BIRU DIAMOND)
 local bFrame = Instance.new("Frame")
 bFrame.Name = "MainFrame"
 bFrame.Size = UDim2.new(0, 200, 0, 110)
@@ -717,7 +638,6 @@ local bCorner = Instance.new("UICorner")
 bCorner.CornerRadius = UDim.new(0, 14)
 bCorner.Parent = bFrame
 
--- STROKE BIRU KINCLONG
 local bStroke = Instance.new("UIStroke")
 bStroke.Color = GN.DIAMOND_BLUE
 bStroke.Thickness = 2
@@ -725,14 +645,12 @@ bStroke.Transparency = 0
 bStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 bStroke.Parent = bFrame
 
--- GLOW BIRU
 local bGlow = Instance.new("UIStroke")
 bGlow.Color = GN.DIAMOND_LIGHT
 bGlow.Thickness = 8
 bGlow.Transparency = 0.7
 bGlow.Parent = bFrame
 
--- GRADIENT BIRU BERGERAK
 local bGradient = Instance.new("UIGradient")
 bGradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, GN.DIAMOND_DARK),
@@ -752,7 +670,6 @@ task.spawn(function()
     end
 end)
 
--- SHIMMER (KILAU BERGERAK)
 local bShimmer = Instance.new("ImageLabel")
 bShimmer.Size = UDim2.new(0, 80, 1, 0)
 bShimmer.Position = UDim2.new(0, -80, 0, 0)
@@ -767,7 +684,6 @@ local bShimmerCorner = Instance.new("UICorner")
 bShimmerCorner.CornerRadius = UDim.new(0, 14)
 bShimmerCorner.Parent = bShimmer
 
--- OVERLAY BIRU
 local bOverlay = Instance.new("Frame")
 bOverlay.Size = UDim2.new(1, 0, 1, 0)
 bOverlay.BackgroundColor3 = GN.DIAMOND_LIGHT
@@ -780,7 +696,6 @@ local bOverlayCorner = Instance.new("UICorner")
 bOverlayCorner.CornerRadius = UDim.new(0, 14)
 bOverlayCorner.Parent = bOverlay
 
--- NEON LINE BIRU
 local bNeonLine = Instance.new("Frame")
 bNeonLine.Size = UDim2.new(1, -24, 0, 3)
 bNeonLine.Position = UDim2.new(0, 12, 0, 0)
@@ -793,7 +708,6 @@ local bNeonLineCorner = Instance.new("UICorner")
 bNeonLineCorner.CornerRadius = UDim.new(0, 2)
 bNeonLineCorner.Parent = bNeonLine
 
--- EQUALIZER ICON
 local bEqIcon = Instance.new("Frame")
 bEqIcon.Size = UDim2.new(0, 18, 0, 18)
 bEqIcon.Position = UDim2.new(0, 8, 0, 7)
@@ -819,7 +733,6 @@ local bBar1 = makeBar(0, 0.4, 0.6)
 local bBar2 = makeBar(5, 0.7, 0.3)
 local bBar3 = makeBar(10, 0.5, 0.5)
 
--- TITLE BOMBAX
 local bTitleApp = Instance.new("TextLabel")
 bTitleApp.Size = UDim2.new(1, -60, 0, 14)
 bTitleApp.Position = UDim2.new(0, 32, 0, 9)
@@ -834,7 +747,6 @@ bTitleApp.TextStrokeColor3 = GN.DIAMOND_DARK
 bTitleApp.ZIndex = 4
 bTitleApp.Parent = bFrame
 
--- TOMBOL CLOSE
 local bToggle = Instance.new("TextButton")
 bToggle.Size = UDim2.new(0, 18, 0, 18)
 bToggle.Position = UDim2.new(1, -24, 0, 9)
@@ -856,7 +768,6 @@ bToggleStroke.Thickness = 1
 bToggleStroke.Transparency = 0.3
 bToggleStroke.Parent = bToggle
 
--- CONTAINER
 local bContainer = Instance.new("Frame")
 bContainer.Size = UDim2.new(1, 0, 1, -32)
 bContainer.Position = UDim2.new(0, 0, 0, 32)
@@ -902,7 +813,6 @@ bTimeLabel.TextXAlignment = Enum.TextXAlignment.Left
 bTimeLabel.ZIndex = 4
 bTimeLabel.Parent = bContainer
 
--- PROGRESS BAR
 local bProgressBg = Instance.new("Frame")
 bProgressBg.Size = UDim2.new(1, -16, 0, 3)
 bProgressBg.Position = UDim2.new(0, 8, 0, 34)
@@ -926,7 +836,6 @@ local bProgressFillCorner = Instance.new("UICorner")
 bProgressFillCorner.CornerRadius = UDim.new(0, 2)
 bProgressFillCorner.Parent = bProgressFill
 
--- TOMBOL-TOMBOL
 local function bBuatTombol(teks, posisiX, warna, ukuran)
     local t = Instance.new("TextButton")
     t.Size = UDim2.new(0, ukuran, 0, 22)
@@ -1057,10 +966,10 @@ end)
 
 updateTeks()
 
-print("✅ [3/15] BOMBAX Music Player - DIAMOND BLUE Theme Loaded")
+print("✅ [3/15] BOMBAX Music Player Loaded")
 print("   " .. #Bombax.DaftarLagu .. " lagu tersedia")-- =========================================================
 -- SECTION 4/15 : FUNGSI UTAMA + HD SKY + FPS/PING + GRAFIK
--- THEME: DIAMOND BLUE
+-- PATCH: applyCrosshair 10 style + applyFullbright max 500 + Kill Fog
 -- =========================================================
 
 -- ============ FIRE ============
@@ -1287,7 +1196,30 @@ origLighting = {
 
 origSky = nil
 for _, v in pairs(Lighting:GetChildren()) do
-    if v:IsA("Sky") then origSky = v break end
+    if v:IsA("Sky") then
+        origSky = v
+        break
+    end
+end
+
+-- ============ KILL FOG (PATCH) ============
+function applyKillFog(s)
+    if s then
+        Lighting.FogEnd = 1000000
+        Lighting.FogStart = 1000000
+        Lighting.FogColor = Color3.fromRGB(255, 255, 255)
+        for _, v in pairs(Lighting:GetChildren()) do
+            if v:IsA("Atmosphere") then
+                v.Density = 0
+                v.Haze = 0
+                v.Glare = 0
+                v.Offset = 0
+            end
+        end
+    else
+        Lighting.FogEnd = origLighting.FogEnd
+        Lighting.FogStart = origLighting.FogStart
+    end
 end
 
 function applyHDSky(s)
@@ -1315,8 +1247,8 @@ function applyHDSky(s)
 
         local lightAtmo = Instance.new("Atmosphere")
         lightAtmo.Name = "HDSky_Light"
-        lightAtmo.Density = 0.1
-        lightAtmo.Offset = 0.1
+        lightAtmo.Density = 0
+        lightAtmo.Offset = 0
         lightAtmo.Color = Color3.fromRGB(220, 230, 255)
         lightAtmo.Decay = Color3.fromRGB(180, 200, 240)
         lightAtmo.Glare = 0
@@ -1340,15 +1272,61 @@ function applyHDSky(s)
             Lighting.Ambient = origLighting.Ambient
             Lighting.OutdoorAmbient = origLighting.OutdoorAmbient
         end)
-        if origSky then
-            local existing = Lighting:FindFirstChild("OrigSky_Clone")
-            if not existing then
-                local c = origSky:Clone()
-                c.Name = "OrigSky_Clone"
-                c.Parent = Lighting
-            end
+    end
+end
+
+-- ============ APPLY SKY (PATCH - KILL FOG) ============
+function applySky(skyName)
+    for _, v in pairs(Lighting:GetChildren()) do
+        if v:IsA("Sky") then v:Destroy() end
+    end
+    
+    -- Kill fog & atmosphere bawaan VD
+    Lighting.FogEnd = 1000000
+    Lighting.FogStart = 1000000
+    Lighting.FogColor = Color3.fromRGB(255, 255, 255)
+    for _, v in pairs(Lighting:GetChildren()) do
+        if v:IsA("Atmosphere") then
+            v.Density = 0
+            v.Haze = 0
+            v.Glare = 0
+            v.Offset = 0
         end
     end
+    
+    if not skyName or skyName == "Default" then
+        if origSky then
+            local c = origSky:Clone()
+            c.Name = "OrigSky_Clone"
+            c.Parent = Lighting
+        end
+        return
+    end
+    
+    local ids = SkyIds[skyName]
+    if not ids then ids = SkyIds.SunsetHD end
+    local sky = Instance.new("Sky")
+    sky.Name = "OneWSky_" .. skyName
+    sky.SkyboxBk = ids.Bk
+    sky.SkyboxDn = ids.Dn or ids.Bk
+    sky.SkyboxFt = ids.Ft or ids.Bk
+    sky.SkyboxLf = ids.Lf or ids.Bk
+    sky.SkyboxRt = ids.Rt or ids.Bk
+    sky.SkyboxUp = ids.Up or ids.Bk
+    sky.Parent = Lighting
+    
+    local atmo = Lighting:FindFirstChild("OneWAtmosphere")
+    if not atmo then
+        atmo = Instance.new("Atmosphere")
+        atmo.Name = "OneWAtmosphere"
+        atmo.Parent = Lighting
+    end
+    atmo.Density = 0
+    atmo.Haze = 0
+    atmo.Glare = 0
+    atmo.Offset = 0
+    atmo.Color = Color3.fromRGB(220, 230, 255)
+    atmo.Decay = Color3.fromRGB(180, 200, 240)
 end
 
 function applyHDTexture(s)
@@ -1443,37 +1421,14 @@ function applyHDAntiAliasing(s)
     end
 end
 
-function applySky(skyName)
-    for _, v in pairs(Lighting:GetChildren()) do
-        if v:IsA("Sky") then v:Destroy() end
-    end
-    if not skyName or skyName == "Default" then
-        if origSky then
-            local c = origSky:Clone()
-            c.Name = "OrigSky_Clone"
-            c.Parent = Lighting
-        end
-        return
-    end
-    local ids = SkyIds[skyName]
-    if not ids then ids = SkyIds.SunsetHD end
-    local sky = Instance.new("Sky")
-    sky.Name = "OneWSky_" .. skyName
-    sky.SkyboxBk = ids.Bk
-    sky.SkyboxDn = ids.Dn or ids.Bk
-    sky.SkyboxFt = ids.Ft or ids.Bk
-    sky.SkyboxLf = ids.Lf or ids.Bk
-    sky.SkyboxRt = ids.Rt or ids.Bk
-    sky.SkyboxUp = ids.Up or ids.Bk
-    sky.Parent = Lighting
-end
-
+-- ============ APPLY FULLBRIGHT (PATCH: max 500) ============
 function applyFullbright(s)
     if s then
-        Lighting.Brightness = 2 + (S.FullbrightVal or 50) / 100
-        Lighting.Ambient = Color3.fromRGB(180, 180, 180)
-        Lighting.OutdoorAmbient = Color3.fromRGB(180, 180, 180)
-        Lighting.ExposureCompensation = 0.2
+        local val = (S.FullbrightVal or 200) / 100
+        Lighting.Brightness = val
+        Lighting.Ambient = Color3.fromRGB(200, 200, 200)
+        Lighting.OutdoorAmbient = Color3.fromRGB(200, 200, 200)
+        Lighting.ExposureCompensation = 0.5
     else
         Lighting.Brightness = origLighting.Brightness
         Lighting.Ambient = origLighting.Ambient
@@ -1588,32 +1543,186 @@ function applyAura(s, color)
     end
 end
 
--- ============ CROSSHAIR ============
+-- =========================================================
+-- CROSSHAIR ENGINE 10 STYLE (PATCH)
+-- =========================================================
 crosshairGui = nil
 
 function applyCrosshair(s, color, size)
-    if not crosshairGui then
-        crosshairGui = Instance.new("ScreenGui")
-        crosshairGui.Name = "OneWCrosshair"
-        crosshairGui.ResetOnSpawn = false
-        crosshairGui.IgnoreGuiInset = true
-        crosshairGui.Parent = PG
+    if crosshairGui then
+        crosshairGui:Destroy()
+        crosshairGui = nil
     end
-    local frame = crosshairGui:FindFirstChild("CrossFrame")
-    if s then
-        if not frame then
-            frame = Instance.new("Frame")
-            frame.Name = "CrossFrame"
-            frame.BackgroundColor3 = color
-            frame.BorderSizePixel = 0
-            frame.Parent = crosshairGui
+    if not s then return end
+
+    crosshairGui = Instance.new("ScreenGui")
+    crosshairGui.Name = "OneWCrosshair"
+    crosshairGui.ResetOnSpawn = false
+    crosshairGui.IgnoreGuiInset = true
+    crosshairGui.DisplayOrder = 999998
+    crosshairGui.Parent = PG
+
+    local container = Instance.new("Frame")
+    container.Size = UDim2.new(0, 200, 0, 200)
+    container.Position = UDim2.new(0.5, -100 + (S.CrosshairOffsetX or 0), 0.5, -100 + (S.CrosshairOffsetY or 0))
+    container.BackgroundTransparency = 1
+    container.Parent = crosshairGui
+
+    local style = S.CrosshairStyle or "Plus"
+    local thickness = S.CrosshairThickness or 2
+    local color2 = color or S.CrosshairColor or Color3.fromRGB(255, 255, 255)
+    local sz = size or S.CrosshairSize or 8
+    local gap = S.CrosshairGap or 4
+    local showOutline = S.CrosshairShowOutline ~= false
+    local outlineCol = S.CrosshairOutlineColor or Color3.fromRGB(0, 0, 0)
+
+    local function mkLine(w, h, x, y, rot)
+        if showOutline then
+            local o = Instance.new("Frame")
+            o.Size = UDim2.new(0, w + 2, 0, h + 2)
+            o.Position = UDim2.new(0, x - 1, 0, y - 1)
+            o.BackgroundColor3 = outlineCol
+            o.BorderSizePixel = 0
+            o.Rotation = rot or 0
+            o.ZIndex = 1
+            o.Parent = container
         end
-        local sz = size or S.CrosshairSize or 8
-        frame.Size = UDim2.new(0, sz, 0, 2)
-        frame.Position = UDim2.new(0.5, -sz/2 + (S.CrosshairOffsetX or 0), 0.5, -1 + (S.CrosshairOffsetY or 0))
-        frame.BackgroundColor3 = color
-    else
-        if frame then frame:Destroy() end
+        local l = Instance.new("Frame")
+        l.Size = UDim2.new(0, w, 0, h)
+        l.Position = UDim2.new(0, x, 0, y)
+        l.BackgroundColor3 = color2
+        l.BorderSizePixel = 0
+        l.Rotation = rot or 0
+        l.ZIndex = 2
+        l.Parent = container
+    end
+
+    local function mkLineCenter(w, h, rot)
+        if showOutline then
+            local o = Instance.new("Frame")
+            o.Size = UDim2.new(0, w + 2, 0, h + 2)
+            o.Position = UDim2.new(0.5, 0, 0.5, 0)
+            o.AnchorPoint = Vector2.new(0.5, 0.5)
+            o.BackgroundColor3 = outlineCol
+            o.BorderSizePixel = 0
+            o.Rotation = rot or 0
+            o.ZIndex = 1
+            o.Parent = container
+        end
+        local l = Instance.new("Frame")
+        l.Size = UDim2.new(0, w, 0, h)
+        l.Position = UDim2.new(0.5, 0, 0.5, 0)
+        l.AnchorPoint = Vector2.new(0.5, 0.5)
+        l.BackgroundColor3 = color2
+        l.BorderSizePixel = 0
+        l.Rotation = rot or 0
+        l.ZIndex = 2
+        l.Parent = container
+    end
+
+    local function mkDot(sizeDot)
+        if showOutline then
+            local o = Instance.new("Frame")
+            o.Size = UDim2.new(0, sizeDot + 2, 0, sizeDot + 2)
+            o.Position = UDim2.new(0.5, 0, 0.5, 0)
+            o.AnchorPoint = Vector2.new(0.5, 0.5)
+            o.BackgroundColor3 = outlineCol
+            o.BorderSizePixel = 0
+            o.ZIndex = 1
+            o.Parent = container
+            rnd(o, 999)
+        end
+        local d = Instance.new("Frame")
+        d.Size = UDim2.new(0, sizeDot, 0, sizeDot)
+        d.Position = UDim2.new(0.5, 0, 0.5, 0)
+        d.AnchorPoint = Vector2.new(0.5, 0.5)
+        d.BackgroundColor3 = color2
+        d.BorderSizePixel = 0
+        d.ZIndex = 2
+        d.Parent = container
+        rnd(d, 999)
+    end
+
+    if style == "Plus" then
+        mkLine(thickness, sz, 100 - thickness/2, 100 - sz - gap)
+        mkLine(thickness, sz, 100 - thickness/2, 100 + gap)
+        mkLine(sz, thickness, 100 - sz - gap, 100 - thickness/2)
+        mkLine(sz, thickness, 100 + gap, 100 - thickness/2)
+    elseif style == "Dot" then
+        mkDot(math.max(4, thickness + 2))
+    elseif style == "Circle" then
+        if showOutline then
+            local oc = Instance.new("Frame")
+            oc.Size = UDim2.new(0, sz * 2 + 4, 0, sz * 2 + 4)
+            oc.Position = UDim2.new(0.5, 0, 0.5, 0)
+            oc.AnchorPoint = Vector2.new(0.5, 0.5)
+            oc.BackgroundTransparency = 1
+            oc.ZIndex = 1
+            oc.Parent = container
+            rnd(oc, 999)
+            local os = Instance.new("UIStroke")
+            os.Color = outlineCol
+            os.Thickness = thickness + 2
+            os.Parent = oc
+        end
+        local circle = Instance.new("Frame")
+        circle.Size = UDim2.new(0, sz * 2, 0, sz * 2)
+        circle.Position = UDim2.new(0.5, 0, 0.5, 0)
+        circle.AnchorPoint = Vector2.new(0.5, 0.5)
+        circle.BackgroundTransparency = 1
+        circle.ZIndex = 2
+        circle.Parent = container
+        rnd(circle, 999)
+        local cs = Instance.new("UIStroke")
+        cs.Color = color2
+        cs.Thickness = thickness
+        cs.Parent = circle
+    elseif style == "Cross" then
+        for i = 1, 2 do
+            mkLineCenter(thickness, sz + gap, (i - 1) * 90 + 45)
+        end
+    elseif style == "X-Cross" then
+        mkLine(thickness, sz, 100 - thickness/2, 100 - sz - gap)
+        mkLine(thickness, sz, 100 - thickness/2, 100 + gap)
+        mkLine(sz, thickness, 100 - sz - gap, 100 - thickness/2)
+        mkLine(sz, thickness, 100 + gap, 100 - thickness/2)
+        for i = 1, 2 do
+            mkLineCenter(thickness, sz + gap, (i - 1) * 90 + 45)
+        end
+    elseif style == "T-Shape" then
+        mkLine(sz * 2 + gap * 2, thickness, 100 - sz - gap, 100 - thickness - gap)
+        mkLine(thickness, sz, 100 - thickness/2, 100)
+    elseif style == "Chevron" then
+        for i = 1, 2 do
+            local line = Instance.new("Frame")
+            line.Size = UDim2.new(0, thickness, 0, sz)
+            line.Position = UDim2.new(0.5, (i == 1) and -sz/2 or sz/2, 0.5, -sz/4)
+            line.AnchorPoint = Vector2.new(0.5, 0.5)
+            line.BackgroundColor3 = color2
+            line.BorderSizePixel = 0
+            line.Rotation = (i == 1) and 45 or -45
+            line.ZIndex = 2
+            line.Parent = container
+        end
+    elseif style == "Arrow" then
+        mkLine(sz * 2, thickness, 100 - sz, 100 - thickness/2)
+        for i = 1, 2 do
+            local line = Instance.new("Frame")
+            line.Size = UDim2.new(0, thickness, 0, sz/1.5)
+            line.Position = UDim2.new(0.5, sz/2, 0.5, (i == 1) and -sz/4 or sz/4)
+            line.AnchorPoint = Vector2.new(0.5, 0.5)
+            line.BackgroundColor3 = color2
+            line.BorderSizePixel = 0
+            line.Rotation = (i == 1) and 45 or -45
+            line.ZIndex = 2
+            line.Parent = container
+        end
+    elseif style == "Brackets" then
+        mkLine(thickness, sz * 1.5, 100 - sz - gap - thickness, 100 - sz * 0.75)
+        mkLine(thickness, sz * 1.5, 100 + sz + gap, 100 - sz * 0.75)
+    elseif style == "Diamond" then
+        mkLineCenter(thickness, sz, 45)
+        mkLineCenter(thickness, sz, -45)
     end
 end
 
@@ -1746,20 +1855,6 @@ end)
 GraphicCreatedEffects = {}
 GraphicPartBackup = {}
 
-function GraphicCreateEffect(className, name)
-    local old = Lighting:FindFirstChild(name)
-    if old and old.ClassName == className then
-        GraphicCreatedEffects[name] = old
-        return old
-    end
-    if old then old:Destroy() end
-    local effect = Instance.new(className)
-    effect.Name = name
-    effect.Parent = Lighting
-    GraphicCreatedEffects[name] = effect
-    return effect
-end
-
 function GraphicRemoveEffects()
     for name, effect in pairs(GraphicCreatedEffects) do
         if effect and effect.Parent then effect:Destroy() end
@@ -1794,8 +1889,6 @@ function GraphicApplySoftCinematic()
     Lighting.Ambient = cfg.Ambient
     Lighting.OutdoorAmbient = cfg.OutdoorAmbient
     Lighting.GlobalShadows = true
-    Lighting.EnvironmentDiffuseScale = 0.90
-    Lighting.EnvironmentSpecularScale = 1
 end
 
 function GraphicEnableSoftCinematic()
@@ -1847,18 +1940,6 @@ function SharpCleanupAll()
     Lighting.ClockTime = SharpBackup.Lighting.ClockTime
     Lighting.FogStart = SharpBackup.Lighting.FogStart
     Lighting.FogEnd = SharpBackup.Lighting.FogEnd
-    for obj, val in pairs(SharpBackup.Particle) do
-        if obj and obj.Parent then obj.Enabled = val end
-    end
-    for obj, val in pairs(SharpBackup.Part) do
-        if obj and obj.Parent then obj.CastShadow = val end
-    end
-    table.clear(SharpBackup.Particle)
-    table.clear(SharpBackup.Part)
-    for name, effect in pairs(SharpBackup.CreatedEffects) do
-        if effect and effect.Parent then effect:Destroy() end
-        SharpBackup.CreatedEffects[name] = nil
-    end
 end
 
 function SharpApplyAntiLag10()
@@ -1973,13 +2054,10 @@ function applyCleanSky()
     end
 end
 
-print("✅ [4/15] Fungsi Utama + HD Sky + FPS/Ping + Grafik Logic Loaded")
-print("   Theme: DIAMOND BLUE")-- =========================================================
+print("✅ [4/15] Fungsi Utama + HD Sky + FPS/Ping + Grafik + Crosshair 10 Style + Kill Fog Loaded")-- =========================================================
 -- SECTION 5/15 : ESP + AUTO PARRY (23 ID)
--- THEME: DIAMOND BLUE
 -- =========================================================
 
--- ============ ESP SYSTEM ============
 ESPObjects = {}
 StatusESP = {}
 CachedSCP = {}
@@ -2588,13 +2666,10 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-print("✅ [5/15] ESP + Auto Parry (23 ID) Loaded")
-print("   Theme: DIAMOND BLUE")-- =========================================================
+print("✅ [5/15] ESP + Auto Parry (23 ID) Loaded")-- =========================================================
 -- SECTION 6/15 : AIMBOT SENTER + AIMBOT KILLER + FAST VAULT
--- THEME: DIAMOND BLUE
 -- =========================================================
 
--- ============ AIMBOT SENTER ============
 AimbotLaserGui = nil
 AimbotLaserLines = {}
 
@@ -2924,10 +2999,8 @@ if LP.Character and FastVault.Enabled then
     pcall(function() hookVault(LP.Character) end)
 end
 
-print("✅ [6/15] Aimbot Senter + Aimbot Killer + Fast Vault Loaded")
-print("   Theme: DIAMOND BLUE")-- =========================================================
+print("✅ [6/15] Aimbot Senter + Aimbot Killer + Fast Vault Loaded")-- =========================================================
 -- SECTION 7/15 : GUI UTAMA + TOMBOL W + PANEL + TAB BAR
--- THEME: DIAMOND BLUE
 -- =========================================================
 
 gui = Instance.new("ScreenGui")
@@ -2943,7 +3016,7 @@ if not ok then gui.Parent = PG end
 _G.Roooor_Gui = gui
 
 -- =========================================================
--- TOMBOL W (PAKE GAMBAR ID LU - UKURAN BESAR)
+-- TOMBOL W
 -- =========================================================
 btnContainer = Instance.new("ImageButton")
 btnContainer.Size = UDim2.fromOffset(56, 56)
@@ -2958,7 +3031,6 @@ btnContainer.ZIndex = 10
 btnContainer.Parent = gui
 rnd(btnContainer, 999)
 
--- RING 1 (OUTER)
 local ring1 = Instance.new("Frame")
 ring1.Size = UDim2.new(1, 8, 1, 8)
 ring1.Position = UDim2.new(0, -4, 0, -4)
@@ -2981,7 +3053,6 @@ ring1Grad.Color = ColorSequence.new({
 })
 ring1Grad.Parent = ring1Stroke
 
--- RING 2 (INNER)
 local ring2 = Instance.new("Frame")
 ring2.Size = UDim2.new(1, 4, 1, 4)
 ring2.Position = UDim2.new(0, -2, 0, -2)
@@ -2996,7 +3067,6 @@ ring2Stroke.Color = DIAMOND_LIGHT
 ring2Stroke.Transparency = 0.4
 ring2Stroke.Parent = ring2
 
--- GLOW BIRU KINCLONG
 local tGlow = Instance.new("UIStroke")
 tGlow.Color = C.CYAN
 tGlow.Thickness = 8
@@ -3034,7 +3104,7 @@ btnContainer.MouseLeave:Connect(function()
 end)
 
 -- =========================================================
--- PANEL UTAMA (BIRU DIAMOND KINCLONG)
+-- PANEL UTAMA
 -- =========================================================
 panel = Instance.new("Frame")
 panel.Size = UDim2.fromOffset(620, 420)
@@ -3048,7 +3118,6 @@ panel.Parent = gui
 rnd(panel, 14)
 strk(panel, DIAMOND_BLUE, 2, 0.25)
 
--- GRADIENT BIRU BERGERAK DI PANEL
 local bgGrad = Instance.new("UIGradient")
 bgGrad.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0.0, Color3.fromRGB(10, 25, 60)),
@@ -3069,9 +3138,7 @@ task.spawn(function()
     end
 end)
 
--- SHIMMER DI PANEL (KILAU BERGERAK)
 local panelShimmer = Instance.new("ImageLabel")
-panelShimmer.Name = "PanelShimmer"
 panelShimmer.Size = UDim2.new(0, 200, 1.5, 0)
 panelShimmer.Position = UDim2.new(0, -200, 0, 0)
 panelShimmer.BackgroundTransparency = 1
@@ -3080,10 +3147,6 @@ panelShimmer.ImageColor3 = Color3.fromRGB(150, 220, 255)
 panelShimmer.ImageTransparency = 0.7
 panelShimmer.ZIndex = 1
 panelShimmer.Parent = panel
-
-local panelShimmerCorner = Instance.new("UICorner")
-panelShimmerCorner.CornerRadius = UDim.new(0, 14)
-panelShimmerCorner.Parent = panelShimmer
 
 task.spawn(function()
     while panelShimmer.Parent do
@@ -3095,16 +3158,7 @@ task.spawn(function()
     end
 end)
 
--- GLOW DI PANEL (BIRU KINCLONG)
-local panelGlow = Instance.new("UIStroke")
-panelGlow.Color = DIAMOND_BLUE
-panelGlow.Thickness = 8
-panelGlow.Transparency = 0.75
-panelGlow.Parent = panel
-
--- =========================================================
--- HEADER (BIRU DIAMOND)
--- =========================================================
+-- HEADER
 header = Instance.new("Frame")
 header.Size = UDim2.new(1, 0, 0, 52)
 header.BackgroundColor3 = C.PANEL
@@ -3113,34 +3167,14 @@ header.BorderSizePixel = 0
 header.Parent = panel
 rnd(header, 14)
 
--- HEADER GRADIENT BIRU BERGERAK
 local headerGradNew = Instance.new("UIGradient")
 headerGradNew.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 50, 120)),
     ColorSequenceKeypoint.new(0.5, Color3.fromRGB(80, 160, 240)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 50, 120)),
 })
-headerGradNew.Rotation = 0
 headerGradNew.Parent = header
 
-task.spawn(function()
-    local t = 0
-    while headerGradNew.Parent do
-        t = t + 1
-        headerGradNew.Rotation = (t * 1.5) % 360
-        task.wait(0.05)
-    end
-end)
-
-local hPatch = Instance.new("Frame")
-hPatch.Size = UDim2.new(1, 0, 0, 26)
-hPatch.Position = UDim2.new(0, 0, 1, -26)
-hPatch.BackgroundColor3 = C.PANEL
-hPatch.BackgroundTransparency = 0.05
-hPatch.BorderSizePixel = 0
-hPatch.Parent = header
-
--- GAMBAR DI PINGGIR "ONE W" (UKURAN BESAR KAYA TOMBOL GUI)
 local hIcon = Instance.new("ImageLabel")
 hIcon.Size = UDim2.fromOffset(36, 36)
 hIcon.Position = UDim2.new(0, 10, 0.5, -18)
@@ -3148,10 +3182,6 @@ hIcon.BackgroundTransparency = 1
 hIcon.Image = IMAGE_ID
 hIcon.Parent = header
 
--- HAPUS LOGO LAMA (yang di dalam kotak)
--- Ga ada logo lagi, cuma hIcon doang
-
--- TEKS "ONE W" (GESER KE KANAN BIAR GAK NUMBRUK GAMBAR)
 local hTitle = Instance.new("TextLabel")
 hTitle.Size = UDim2.new(0, 200, 0, 24)
 hTitle.Position = UDim2.new(0, 54, 0.5, -12)
@@ -3165,14 +3195,6 @@ hTitle.TextStrokeTransparency = 0.5
 hTitle.TextStrokeColor3 = Color3.fromRGB(20, 60, 120)
 hTitle.Parent = header
 
-local hTitleGrad = Instance.new("UIGradient")
-hTitleGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(180, 230, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 200, 255)),
-})
-hTitleGrad.Parent = hTitle
-
--- TOMBOL MINIMIZE
 local minBtn = Instance.new("TextButton")
 minBtn.Size = UDim2.fromOffset(26, 26)
 minBtn.Position = UDim2.new(1, -62, 0.5, -13)
@@ -3188,7 +3210,6 @@ minBtn.Parent = header
 rnd(minBtn, 6)
 strk(minBtn, DIAMOND_BLUE, 1, 0.4)
 
--- TOMBOL CLOSE
 closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.fromOffset(26, 26)
 closeBtn.Position = UDim2.new(1, -32, 0.5, -13)
@@ -3204,9 +3225,7 @@ closeBtn.Parent = header
 rnd(closeBtn, 6)
 strk(closeBtn, C.RED, 1, 0.4)
 
--- =========================================================
 -- TAB BAR
--- =========================================================
 tabBar = Instance.new("Frame")
 tabBar.Size = UDim2.new(1, -20, 0, 42)
 tabBar.Position = UDim2.new(0, 10, 0, 60)
@@ -3298,9 +3317,7 @@ rightLayout.Parent = rightScroll
 cs = leftScroll
 _G.Roooor_cs = cs
 
--- =========================================================
 -- DRAG PANEL
--- =========================================================
 dragging = false
 dragStart = nil
 startPos = nil
@@ -3332,9 +3349,7 @@ UIS.InputEnded:Connect(function(input)
     end
 end)
 
--- =========================================================
 -- DRAG TOMBOL W
--- =========================================================
 btnDragging = false
 btnDragStart = nil
 btnStartPos = nil
@@ -3371,9 +3386,7 @@ UIS.InputEnded:Connect(function(input)
     end
 end)
 
--- =========================================================
 -- OPEN / CLOSE
--- =========================================================
 isOpen = false
 
 function openPanel()
@@ -3429,10 +3442,8 @@ UIS.InputBegan:Connect(function(input, gpe)
     end
 end)
 
-print("✅ [7/15] GUI + Tombol W Gambar + Panel + Tab Bar Loaded")
-print("   Theme: DIAMOND BLUE")-- =========================================================
+print("✅ [7/15] GUI + Tombol W + Panel + Tab Bar Loaded")-- =========================================================
 -- SECTION 8/15 : KOMPONEN UI
--- THEME: DIAMOND BLUE
 -- =========================================================
 
 -- ============ SECTION HEADER ============
@@ -3584,10 +3595,6 @@ function sl(name, min, max, def, cb, parent)
     fill.BorderSizePixel = 0
     fill.Parent = bg2
     rnd(fill, 3)
-
-    local fillGrad = Instance.new("UIGradient")
-    fillGrad.Color = ColorSequence.new(DIAMOND_DARK, DIAMOND_BLUE, DIAMOND_LIGHT)
-    fillGrad.Parent = fill
 
     local kn = Instance.new("Frame")
     kn.Size = UDim2.fromOffset(12, 12)
@@ -3779,6 +3786,112 @@ function drp(name, options, def, cb, parent)
     end
 end
 
+-- ============ TELEPORT BUTTON (buat Teleport Menu) ============
+function tpBtn(name, icon, color, callback, parent)
+    parent = parent or cs
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(1, -4, 0, 42)
+    b.BackgroundColor3 = C.PANEL
+    b.BackgroundTransparency = 0.3
+    b.Text = ""
+    b.BorderSizePixel = 0
+    b.AutoButtonColor = false
+    b.ClipsDescendants = true
+    b.Parent = parent
+    rnd(b, 10)
+
+    local fStrk = strk(b, color or C.CYAN, 1.5, 0.4)
+
+    local bgGrad = Instance.new("UIGradient")
+    bgGrad.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, C.PANEL),
+        ColorSequenceKeypoint.new(1, C.BG2),
+    })
+    bgGrad.Rotation = 90
+    bgGrad.Parent = b
+
+    local accentBar = Instance.new("Frame")
+    accentBar.Size = UDim2.new(0, 4, 1, -10)
+    accentBar.Position = UDim2.new(0, 6, 0, 5)
+    accentBar.BackgroundColor3 = color or C.CYAN
+    accentBar.BorderSizePixel = 0
+    accentBar.Parent = b
+    rnd(accentBar, 2)
+
+    local iconBox = Instance.new("Frame")
+    iconBox.Size = UDim2.fromOffset(28, 28)
+    iconBox.Position = UDim2.new(0, 16, 0.5, -14)
+    iconBox.BackgroundColor3 = color or C.CYAN
+    iconBox.BackgroundTransparency = 0.15
+    iconBox.BorderSizePixel = 0
+    iconBox.Parent = b
+    rnd(iconBox, 7)
+
+    local iconLbl = Instance.new("TextLabel")
+    iconLbl.Size = UDim2.new(1, 0, 1, 0)
+    iconLbl.BackgroundTransparency = 1
+    iconLbl.Text = icon or "→"
+    iconLbl.TextColor3 = Color3.fromRGB(15, 30, 60)
+    iconLbl.TextSize = 15
+    iconLbl.Font = Enum.Font.GothamBlack
+    iconLbl.Parent = iconBox
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -80, 1, 0)
+    label.Position = UDim2.new(0, 52, 0, 0)
+    label.BackgroundTransparency = 1
+    label.Text = name
+    label.TextColor3 = C.TXT
+    label.TextSize = 10
+    label.Font = Enum.Font.GothamBold
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = b
+
+    local arrow = Instance.new("TextLabel")
+    arrow.Size = UDim2.new(0, 28, 1, 0)
+    arrow.Position = UDim2.new(1, -32, 0, 0)
+    arrow.BackgroundTransparency = 1
+    arrow.Text = "→"
+    arrow.TextColor3 = color or C.CYAN
+    arrow.TextSize = 16
+    arrow.Font = Enum.Font.GothamBlack
+    arrow.Parent = b
+
+    b.MouseEnter:Connect(function()
+        TweenService:Create(b, TweenInfo.new(0.15), {
+            BackgroundColor3 = color or C.CYAN,
+            BackgroundTransparency = 0.5,
+        }):Play()
+        TweenService:Create(arrow, TweenInfo.new(0.15), {
+            Position = UDim2.new(1, -24, 0, 0),
+        }):Play()
+    end)
+
+    b.MouseLeave:Connect(function()
+        TweenService:Create(b, TweenInfo.new(0.15), {
+            BackgroundColor3 = C.PANEL,
+            BackgroundTransparency = 0.3,
+        }):Play()
+        TweenService:Create(arrow, TweenInfo.new(0.15), {
+            Position = UDim2.new(1, -32, 0, 0),
+        }):Play()
+    end)
+
+    b.MouseButton1Click:Connect(function()
+        playToggleSound()
+        if callback then pcall(callback) end
+        TweenService:Create(b, TweenInfo.new(0.1), {
+            BackgroundColor3 = color or C.CYAN,
+            BackgroundTransparency = 0.2,
+        }):Play()
+        task.wait(0.15)
+        TweenService:Create(b, TweenInfo.new(0.2), {
+            BackgroundColor3 = C.PANEL,
+            BackgroundTransparency = 0.3,
+        }):Play()
+    end)
+end
+
 -- ============ TAB MAKER ============
 activeTab = nil
 tabButtons = {}
@@ -3855,12 +3968,11 @@ _G.Roooor_sl = sl
 _G.Roooor_cpk = cpk
 _G.Roooor_btn = btn
 _G.Roooor_drp = drp
+_G.Roooor_tpBtn = tpBtn
 _G.Roooor_makeTab = makeTab
 
-print("✅ [8/15] Komponen UI Loaded")
-print("   Theme: DIAMOND BLUE")-- =========================================================
+print("✅ [8/15] Komponen UI Loaded")-- =========================================================
 -- SECTION 9/15 : TAB SURVIVOR + KILLER + HITBOX + TELEPORT
--- (SECTION 9 BARU - sudah include Teleport Menu)
 -- =========================================================
 
 _G.HitboxEsp = _G.HitboxEsp or {
@@ -4172,7 +4284,12 @@ makeTab("Survivor", "🏃", 1, function()
     sec("Auto Skill Check", "⚡")
     tog("Enable Auto Skill Check", false, function(s)
         SkillCheck.Enabled = s
-        if s then startSkillCheck() end
+        if s then
+            task.spawn(function()
+                task.wait(0.1)
+                if startSkillCheck then startSkillCheck() end
+            end)
+        end
     end)
     drp("Mode", {"Perfect", "Instant"}, "Perfect", function(v)
         SkillCheck.Mode = v
@@ -4224,16 +4341,10 @@ makeTab("Survivor", "🏃", 1, function()
 end, function()
     -- =========================================================
     -- TELEPORT MENU (Kolom Kanan Tab Survivor)
-    -- Hasil gabungan SC Teleport ke SC ONE W
     -- =========================================================
     sec("Teleport Menu", "🌀", rightScroll)
 
-    local TP = _G.Teleport or {
-        OffsetY = 5,
-        FrontDistance = 4,
-        Mode = "Random",
-        Notify = true,
-    }
+    local TP = _G.Teleport or { OffsetY = 5, FrontDistance = 4, Mode = "Random", Notify = true }
     _G.Teleport = TP
 
     local function TP_GetPos(obj)
@@ -4249,18 +4360,14 @@ end, function()
     local function TP_DoTeleport(targetObj, targetPos, targetName)
         local root = getRoot()
         if not root then return false end
-
         local offset = TP.OffsetY or 5
         local fd = TP.FrontDistance or 4
         local finalCF
 
         if targetObj then
             local bp = nil
-            if targetObj:IsA("BasePart") then
-                bp = targetObj
-            elseif targetObj:IsA("Model") then
-                bp = targetObj.PrimaryPart or targetObj:FindFirstChildWhichIsA("BasePart")
-            end
+            if targetObj:IsA("BasePart") then bp = targetObj
+            elseif targetObj:IsA("Model") then bp = targetObj.PrimaryPart or targetObj:FindFirstChildWhichIsA("BasePart") end
             if bp then
                 local frontOffset = bp.CFrame.LookVector * fd
                 local tpPos = bp.Position + frontOffset + Vector3.new(0, offset, 0)
@@ -4293,8 +4400,7 @@ end, function()
         local root = getRoot()
         local myPos = root and root.Position or Vector3.new(0, 0, 0)
         local mode = TP.Mode or "Random"
-        if mode == "Random" then
-            return targets[math.random(1, #targets)]
+        if mode == "Random" then return targets[math.random(1, #targets)]
         elseif mode == "Nearest" then
             local b, bd = nil, math.huge
             for _, t in ipairs(targets) do
@@ -4319,9 +4425,7 @@ end, function()
             for _, n in ipairs(names) do
                 if obj.Name == n then
                     local p = TP_GetPos(obj)
-                    if p then
-                        table.insert(r, {pos = p, name = n, obj = obj})
-                    end
+                    if p then table.insert(r, {pos=p, name=n, obj=obj}) end
                     break
                 end
             end
@@ -4334,14 +4438,12 @@ end, function()
         for _, obj in ipairs(workspace:GetDescendants()) do
             local n = string.lower(obj.Name)
             if n == "gate" or n == "exitgate" or n == "gateexit"
-               or n == "escape" or n == "escapegate"
-               or n == "fininshline" or n == "finishline"
-               or string.find(n, "^gate%d")
-               or string.find(n, "finishline") then
+            or n == "escape" or n == "escapegate"
+            or n == "fininshline" or n == "finishline"
+            or string.find(n, "^gate%d")
+            or string.find(n, "finishline") then
                 local p = TP_GetPos(obj)
-                if p then
-                    table.insert(r, {pos = p, name = obj.Name, obj = obj})
-                end
+                if p then table.insert(r, {pos=p, name=obj.Name, obj=obj}) end
             end
         end
         return r
@@ -4351,7 +4453,7 @@ end, function()
         local r = {}
         for _, obj in ipairs(workspace:GetDescendants()) do
             if obj.Name == "HookPoint" and obj:IsA("BasePart") then
-                table.insert(r, {pos = obj.Position, name = "Hook", obj = obj})
+                table.insert(r, {pos=obj.Position, name="Hook", obj=obj})
             end
         end
         return r
@@ -4363,9 +4465,7 @@ end, function()
             local n = string.lower(obj.Name)
             if string.find(n, "scp") then
                 local p = TP_GetPos(obj)
-                if p then
-                    table.insert(r, {pos = p, name = obj.Name, obj = obj})
-                end
+                if p then table.insert(r, {pos=p, name=obj.Name, obj=obj}) end
             end
         end
         return r
@@ -4378,55 +4478,54 @@ end, function()
                 local hum = p.Character:FindFirstChildOfClass("Humanoid")
                 local hrp = p.Character:FindFirstChild("HumanoidRootPart")
                 if hum and hrp and hum.Health > 0 then
-                    table.insert(r, {pos = hrp.Position, name = p.Name, obj = p.Character})
+                    table.insert(r, {pos=hrp.Position, name=p.Name, obj=p.Character})
                 end
             end
         end
         return r
     end
 
-    -- Tombol Teleport
-    btn("⚙  Generator", function()
+    tpBtn("Generator", "⚙", Color3.fromRGB(255, 170, 0), function()
         local p = TP_Pick(TP_FindByNames({"Generator"}))
         if p then TP_DoTeleport(p.obj, p.pos, "Generator") end
     end, rightScroll)
 
-    btn("▬  Pallet", function()
+    tpBtn("Pallet", "▬", Color3.fromRGB(74, 255, 181), function()
         local p = TP_Pick(TP_FindByNames({"Pallet", "Palletwrong"}))
         if p then TP_DoTeleport(p.obj, p.pos, "Pallet") end
     end, rightScroll)
 
-    btn("⛩  Gate / Exit", function()
+    tpBtn("Gate / Exit", "⛩", Color3.fromRGB(255, 220, 80), function()
         local p = TP_Pick(TP_FindGates())
         if p then TP_DoTeleport(p.obj, p.pos, "Gate") end
     end, rightScroll)
 
-    btn("▢  Window", function()
+    tpBtn("Window", "▢", Color3.fromRGB(80, 240, 255), function()
         local p = TP_Pick(TP_FindByNames({"Window"}))
         if p then TP_DoTeleport(p.obj, p.pos, "Window") end
     end, rightScroll)
 
-    btn("⤴  Hook Point", function()
+    tpBtn("Hook Point", "⤴", Color3.fromRGB(255, 130, 60), function()
         local p = TP_Pick(TP_FindHooks())
         if p then TP_DoTeleport(p.obj, p.pos, "Hook") end
     end, rightScroll)
 
-    btn("☠  SCP", function()
+    tpBtn("SCP", "☠", Color3.fromRGB(180, 100, 255), function()
         local p = TP_Pick(TP_FindSCPs())
         if p then TP_DoTeleport(p.obj, p.pos, "SCP") end
     end, rightScroll)
 
-    btn("☺  Survivor", function()
+    tpBtn("Survivor", "☺", Color3.fromRGB(80, 255, 150), function()
         local p = TP_Pick(TP_FindPlayers("Survivors"))
         if p then TP_DoTeleport(p.obj, p.pos, "Survivor: " .. p.name) end
     end, rightScroll)
 
-    btn("⚔  Killer", function()
+    tpBtn("Killer", "⚔", Color3.fromRGB(255, 70, 100), function()
         local p = TP_Pick(TP_FindPlayers("Killer"))
         if p then TP_DoTeleport(p.obj, p.pos, "Killer: " .. p.name) end
     end, rightScroll)
 
-    btn("★  Random", function()
+    tpBtn("Random", "★", Color3.fromRGB(255, 200, 50), function()
         local all = {}
         for _, t in ipairs(TP_FindByNames({"Generator"})) do table.insert(all, t) end
         for _, t in ipairs(TP_FindByNames({"Pallet", "Palletwrong"})) do table.insert(all, t) end
@@ -4454,19 +4553,6 @@ end, function()
     tog("TP Notify", true, function(s)
         TP.Notify = s
     end, rightScroll)
-
-    sec("Info", "ℹ️", rightScroll)
-    local infoLbl = Instance.new("TextLabel")
-    infoLbl.Size = UDim2.new(1, -4, 0, 80)
-    infoLbl.BackgroundTransparency = 1
-    infoLbl.Text = "Mode:\n• Random = objek acak\n• Nearest = terdekat\n• Farthest = terjauh\n\nOffset Y = tinggi dari permukaan\nFront Distance = jarak di depan objek"
-    infoLbl.TextColor3 = C.DIM
-    infoLbl.TextSize = 9
-    infoLbl.Font = Enum.Font.Gotham
-    infoLbl.TextXAlignment = Enum.TextXAlignment.Left
-    infoLbl.TextYAlignment = Enum.TextYAlignment.Top
-    infoLbl.TextWrapped = true
-    infoLbl.Parent = rightScroll
 end)
 
 -- =========================================================
@@ -4519,9 +4605,10 @@ end, function()
             and ReplicatedStorage.Remotes.Killers.Masked:FindFirstChild("Deactivatepower")
         if Event then Event:FireServer() end
     end, rightScroll)
-end)-- =========================================================
+end)
+
+print("✅ [9/15] Tab Survivor + Killer + Hitbox + Teleport Menu Loaded")-- =========================================================
 -- SECTION 10/15 : TAB ESP + FIRE + MUSIK
--- THEME: DIAMOND BLUE
 -- =========================================================
 
 -- =========================================================
@@ -4726,10 +4813,9 @@ end, function()
     end
 end)
 
-print("✅ [10/15] Tab ESP + Fire + Musik Loaded")
-print("   Theme: DIAMOND BLUE")-- =========================================================
+print("✅ [10/15] Tab ESP + Fire + Musik Loaded")-- =========================================================
 -- SECTION 11/15 : TAB MISC + VISUAL + GRAFIK ULTRA
--- THEME: DIAMOND BLUE
+-- Crosshair 10 Style UI + Kill Fog + Brightness + Clock Time
 -- =========================================================
 
 -- =========================================================
@@ -4762,8 +4848,8 @@ makeTab("Misc", "⚙️", 6, function()
     end)
 end, function()
     sec("FPS Counter", "📊", rightScroll)
-    tog("Show FPS Counter", false, function(s) S.ShowFPS = s end, rightScroll)
-    tog("Show Ping Counter", false, function(s) S.ShowPing = s end, rightScroll)
+    tog("Show FPS Counter", true, function(s) S.ShowFPS = s end, rightScroll)
+    tog("Show Ping Counter", true, function(s) S.ShowPing = s end, rightScroll)
 
     sec("Notify", "🔔", rightScroll)
     tog("Kill Feed", false, function(s) S.KillFeed = s end, rightScroll)
@@ -4782,13 +4868,25 @@ makeTab("Visual", "✨", 7, function()
         S.Fullbright = s
         applyFullbright(s)
     end)
-    sl("Brightness Level", 10, 200, 100, function(v)
+    sl("Brightness Level", 0, 500, 200, function(v)
         S.FullbrightVal = v
         if S.Fullbright then applyFullbright(true) end
+    end)
+    sl("Clock Time", 0, 24, 14, function(v)
+        S.ClockTime = v
+        pcall(function() Lighting.ClockTime = v end)
+    end)
+    sl("Custom Brightness", 0, 500, 200, function(v)
+        S.CustomBrightness = v
+        pcall(function() Lighting.Brightness = v / 100 end)
     end)
     tog("No Fog", false, function(s)
         S.NoFog = s
         applyNoFog(s)
+    end)
+    tog("Kill VD Fog", true, function(s)
+        S.KillFog = s
+        applyKillFog(s)
     end)
 
     sec("HD Sky", "🔷")
@@ -4856,18 +4954,54 @@ end, function()
         if S.ZoomOut then applyZoomOut(true, v) end
     end, rightScroll)
 
+    -- =========================================================
+    -- CROSSHAIR 10 STYLE
+    -- =========================================================
     sec("Crosshair", "🎯", rightScroll)
+
     tog("Enable Crosshair", false, function(s)
         S.Crosshair = s
         applyCrosshair(s, S.CrosshairColor, S.CrosshairSize)
     end, rightScroll)
+
     cpk("Crosshair Color", S.CrosshairColor, function(c)
         S.CrosshairColor = c
         if S.Crosshair then applyCrosshair(true, c, S.CrosshairSize) end
     end, rightScroll)
-    sl("Crosshair Size", 4, 30, 8, function(v)
+
+    drp("Crosshair Style", {"Plus","Dot","Circle","Cross","X-Cross","T-Shape","Chevron","Arrow","Brackets","Diamond"}, "Plus", function(v)
+        S.CrosshairStyle = v
+        if S.Crosshair then applyCrosshair(true, S.CrosshairColor, S.CrosshairSize) end
+    end, rightScroll)
+
+    sl("Crosshair Size", 2, 30, 8, function(v)
         S.CrosshairSize = v
         if S.Crosshair then applyCrosshair(true, S.CrosshairColor, v) end
+    end, rightScroll)
+
+    sl("Crosshair Thickness", 1, 8, 2, function(v)
+        S.CrosshairThickness = v
+        if S.Crosshair then applyCrosshair(true, S.CrosshairColor, S.CrosshairSize) end
+    end, rightScroll)
+
+    sl("Crosshair Gap", 0, 15, 4, function(v)
+        S.CrosshairGap = v
+        if S.Crosshair then applyCrosshair(true, S.CrosshairColor, S.CrosshairSize) end
+    end, rightScroll)
+
+    sl("Crosshair Pos X", -200, 200, 0, function(v)
+        S.CrosshairOffsetX = v
+        if S.Crosshair then applyCrosshair(true, S.CrosshairColor, S.CrosshairSize) end
+    end, rightScroll)
+
+    sl("Crosshair Pos Y", -200, 200, 0, function(v)
+        S.CrosshairOffsetY = v
+        if S.Crosshair then applyCrosshair(true, S.CrosshairColor, S.CrosshairSize) end
+    end, rightScroll)
+
+    tog("Show Outline", true, function(s)
+        S.CrosshairShowOutline = s
+        if S.Crosshair then applyCrosshair(true, S.CrosshairColor, S.CrosshairSize) end
     end, rightScroll)
 
     sec("Character Effects", "✨", rightScroll)
@@ -4967,9 +5101,9 @@ end, function()
         rnd(btn2, 6)
         strk(btn2, DIAMOND_BLUE, 1, 0.4)
 
-        local pad = Instance.new("UIPadding")
-        pad.PaddingLeft = UDim.new(0, 10)
-        pad.Parent = btn2
+        local pad2 = Instance.new("UIPadding")
+        pad2.PaddingLeft = UDim.new(0, 10)
+        pad2.Parent = btn2
 
         if GraphicState.SelectedPreset == presetName then
             btn2.BackgroundColor3 = C.CYAN
@@ -5001,10 +5135,8 @@ end, function()
     end, rightScroll)
 end)
 
-print("✅ [11/15] Tab Misc + Visual + Grafik Ultra Loaded")
-print("   Theme: DIAMOND BLUE")-- =========================================================
+print("✅ [11/15] Tab Misc + Visual + Grafik Ultra + Crosshair 10 Style Loaded")-- =========================================================
 -- SECTION 12/15 : TAB AIMBOT + TAB MOONWALK
--- THEME: DIAMOND BLUE
 -- =========================================================
 
 -- =========================================================
@@ -5094,10 +5226,8 @@ end, function()
     tog("Use Slow Speed", true, function(s) Moonwalk.UseSlow = s end, rightScroll)
 end)
 
-print("✅ [12/15] Tab Aimbot + Tab Moonwalk Loaded")
-print("   Theme: DIAMOND BLUE")-- =========================================================
+print("✅ [12/15] Tab Aimbot + Tab Moonwalk Loaded")-- =========================================================
 -- SECTION 13/15 : LOOP FITUR AKTIF + STUN INDICATOR + CAMERA FIX
--- THEME: DIAMOND BLUE
 -- =========================================================
 
 -- ============ MOONWALK BUTTON + LOGIC ============
@@ -5515,9 +5645,7 @@ task.spawn(function()
     end
 end)
 
--- =========================================================
--- FITUR BARU: STUN INDICATOR + SOUND
--- =========================================================
+-- ============ STUN INDICATOR + SOUND ============
 local function CreateStunBillboard(char)
     local head = char:FindFirstChild("Head")
     if not head then return nil end
@@ -5573,13 +5701,6 @@ local function CreateStunBillboard(char)
     local fillCorner = Instance.new("UICorner")
     fillCorner.CornerRadius = UDim.new(1, 0)
     fillCorner.Parent = barFill
-    local fillGrad = Instance.new("UIGradient")
-    fillGrad.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, DIAMOND_LIGHT),
-        ColorSequenceKeypoint.new(0.5, DIAMOND_BLUE),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 80, 100)),
-    })
-    fillGrad.Parent = barFill
 
     local timerLbl = Instance.new("TextLabel")
     timerLbl.Name = "TimerLbl"
@@ -5906,13 +6027,29 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-print("✅ [13/15] Loop Fitur Aktif + Stun Indicator + Camera Fix + Anti-Ilang Loaded")
-print("   Theme: DIAMOND BLUE")-- =========================================================
+-- ============ KILL FOG AUTO-REAPPLY ============
+task.spawn(function()
+    while task.wait(0.5) do
+        if S.KillFog then
+            if Lighting.FogEnd < 100000 then
+                Lighting.FogEnd = 1000000
+                Lighting.FogStart = 1000000
+            end
+            for _, v in pairs(Lighting:GetChildren()) do
+                if v:IsA("Atmosphere") and v.Density > 0 then
+                    v.Density = 0
+                    v.Haze = 0
+                    v.Glare = 0
+                end
+            end
+        end
+    end
+end)
+
+print("✅ [13/15] Loop Fitur + Stun Indicator + Camera Fix + Anti-Ilang + Kill Fog Auto Loaded")-- =========================================================
 -- SECTION 14/15 : ANTI-ILANG EXTENDED + RECOVERY + AUTO REAPPLY
--- THEME: DIAMOND BLUE
 -- =========================================================
 
--- ============ LOADING CLEANUP ============
 task.delay(3, function()
     pcall(function()
         local oldLoading = PG:FindFirstChild("OneWLoading")
@@ -5920,7 +6057,6 @@ task.delay(3, function()
     end)
 end)
 
--- ============ RECOVERY GUI ============
 function RecreateAllGUI()
     local coreGui = game:GetService("CoreGui")
 
@@ -5990,7 +6126,6 @@ LP.CharacterAdded:Connect(function(char)
     pcall(RecreateAllGUI)
 end)
 
--- ============ AUTO REAPPLY SETELAH RESPAWN ============
 LP.CharacterAdded:Connect(function(char)
     task.wait(1.5)
 
@@ -6018,6 +6153,9 @@ LP.CharacterAdded:Connect(function(char)
     if FastVault.Enabled then
         pcall(function() hookVault(char) end)
     end
+    if S.KillFog then
+        pcall(function() applyKillFog(true) end)
+    end
 
     AimbotSenter.CurrentTarget = nil
     AimbotSenter.HoldingSenter = false
@@ -6025,7 +6163,6 @@ LP.CharacterAdded:Connect(function(char)
     Aimlock.Holding = false
 end)
 
--- ============ AUTO REAPPLY SKY + FIRE ============
 task.spawn(function()
     while task.wait(8) do
         if S.SkyId and S.SkyId ~= "Default" then
@@ -6049,7 +6186,6 @@ task.spawn(function()
     end
 end)
 
--- ============ GRAFIK ULTRA AUTO REAPPLY ============
 task.spawn(function()
     while task.wait(5) do
         if GraphicState.SoftCinematic then
@@ -6079,7 +6215,6 @@ LP.CharacterAdded:Connect(function(char)
     end
 end)
 
--- ============ BOMBAX AUTO RECOVERY ============
 task.spawn(function()
     while task.wait(2) do
         if Bombax.Music and not Bombax.Music.Parent then
@@ -6095,7 +6230,6 @@ task.spawn(function()
     end
 end)
 
--- ============ AUTO HOOK KILLER BARU ============
 Players.PlayerAdded:Connect(function(p)
     p.CharacterAdded:Connect(function(c)
         task.wait(1)
@@ -6117,7 +6251,6 @@ task.spawn(function()
     end
 end)
 
--- ============ SAFE CALL ============
 function safeCall(fn, ...)
     local args = {...}
     local ok, err = pcall(function()
@@ -6131,7 +6264,6 @@ end
 
 _G.Roooor_safeCall = safeCall
 
--- ============ UNLOAD FUNCTION ============
 function UnloadAll()
     print("[Hub] Unloading...")
     pcall(function()
@@ -6173,13 +6305,10 @@ end
 
 _G.Roooor_Unload = UnloadAll
 
-print("✅ [14/15] Anti-Ilang Extended + Recovery + Auto Reapply Loaded")
-print("   Theme: DIAMOND BLUE")-- =========================================================
+print("✅ [14/15] Anti-Ilang Extended + Recovery + Auto Reapply Loaded")-- =========================================================
 -- SECTION 15/15 : AUTO-ON + PRINT FINAL
--- THEME: DIAMOND BLUE
 -- =========================================================
 
--- ============ AUTO-ON SETELAH 2 DETIK ============
 task.spawn(function()
     task.wait(2)
 
@@ -6207,7 +6336,7 @@ task.spawn(function()
     S.ESPGenBarHeight = 8
     _G.SliderStates["Bar Height"] = 8
 
-    -- Text Size TERKECIL (6)
+    -- Text Size
     S.ESPGenBarTextSize = 6
     _G.SliderStates["Text Size"] = 6
 
@@ -6215,7 +6344,7 @@ task.spawn(function()
     S.ESPNameMode = "Galaxy"
     _G.DropdownStates["Name Mode"] = 2
 
-    -- Name Size TERKECIL
+    -- Name Size
     S.ESPNameSize = 8
     _G.SliderStates["Name Size"] = 8
 
@@ -6235,17 +6364,29 @@ task.spawn(function()
     StunIndicator.Enabled = true
     _G.ToggleStates["Enable Stun Sound"] = true
 
+    -- FPS + Ping ON
+    S.ShowFPS = true
+    S.ShowPing = true
+    _G.ToggleStates["Show FPS Counter"] = true
+    _G.ToggleStates["Show Ping Counter"] = true
+
+    -- Kill Fog ON
+    S.KillFog = true
+    _G.ToggleStates["Kill VD Fog"] = true
+    pcall(function() applyKillFog(true) end)
+
     print("[AUTO-ON] Selesai!")
     print("[AUTO-ON] - ESP Survivor: ON")
     print("[AUTO-ON] - ESP Killer: ON")
     print("[AUTO-ON] - ESP Generator: ON (Bar Mode)")
-    print("[AUTO-ON] - Generator Bar Text: TERKECIL (6)")
     print("[AUTO-ON] - Korblox: ON")
     print("[AUTO-ON] - Headless: ON")
     print("[AUTO-ON] - Stun Indicator: ON")
+    print("[AUTO-ON] - FPS + Ping: ON")
+    print("[AUTO-ON] - Kill Fog: ON")
 end)
 
--- ============ BANNER LOADING SUCCESS (BIRU DIAMOND) ============
+-- ============ BANNER LOADING SUCCESS ============
 task.spawn(function()
     task.wait(2.5)
     pcall(function()
@@ -6291,7 +6432,7 @@ task.spawn(function()
         sub.Size = UDim2.new(1, 0, 0, 18)
         sub.Position = UDim2.new(0, 0, 0, 36)
         sub.BackgroundTransparency = 1
-        sub.Text = "Klik tombol W atau RightShift buat buka menu"
+        sub.Text = "32 Lagu + Crosshair 10 Style + Kill Fog"
         sub.TextColor3 = Color3.fromRGB(180, 230, 255)
         sub.TextSize = 10
         sub.Font = Enum.Font.GothamBold
@@ -6314,8 +6455,8 @@ end)
 task.delay(4, function()
     pcall(function()
         StarterGui:SetCore("SendNotification", {
-            Title = "ONE W Hub v4",
-            Text = "Auto Parry + Music Player + Stun Indicator\nRightShift buat buka menu",
+            Title = "ONE W Hub v6",
+            Text = "32 Lagu + Crosshair 10 Style + Teleport + Kill Fog\nRightShift buat buka menu",
             Duration = 5
         })
     end)
@@ -6326,7 +6467,7 @@ task.wait(0.5)
 
 print("")
 print("==========================================")
-print("  ONE W - DIAMOND BLUE PREMIUM HUB v4")
+print("  ONE W v6 - DIAMOND BLUE FINAL")
 print("  SEMUA 15 SECTION LOADED")
 print("==========================================")
 print("  Keybind:")
@@ -6335,20 +6476,27 @@ print("    V = Moonwalk")
 print("    K = Unlock Camera")
 print("------------------------------------------")
 print("  10 TAB TERSEDIA:")
-print("    1. Survivor   6. Misc")
-print("    2. Killer     7. Visual")
-print("    3. ESP        8. Grafik Ultra")
-print("    4. Fire       9. Aimbot")
-print("    5. Musik     10. Moonwalk")
+print("    1. Survivor  (Auto Parry + Teleport Menu)")
+print("    2. Killer    (Hitbox + Spoof)")
+print("    3. ESP       (Survivor/Killer/Gen/SCP)")
+print("    4. Fire      (60 efek)")
+print("    5. Musik     (32 lagu)")
+print("    6. Misc      (Movement + FPS)")
+print("    7. Visual    (Crosshair 10 Style + Kill Fog)")
+print("    8. Grafik Ultra")
+print("    9. Aimbot")
+print("   10. Moonwalk")
 print("------------------------------------------")
-print("  FITUR BARU:")
-print("    - Tombol W pake gambar ID lu")
-print("    - Logo header pake gambar ID lu")
-print("    - Loading screen biru diamond + gambar")
-print("    - Background menu biru kinclong + shimmer")
-print("    - Stun Indicator + Suara")
-print("    - BOMBAX Music tema biru diamond")
-print("  MUSIC: " .. #Bombax.DaftarLagu .. " lagu")
+print("  FITUR v6:")
+print("    - 32 Lagu (24 lama + 8 baru VD)")
+print("    - Crosshair 10 STYLE (Plus/Dot/Circle/Cross/X-Cross/")
+print("      T-Shape/Chevron/Arrow/Brackets/Diamond)")
+print("    - Crosshair bisa geser KIRI/KANAN/ATAS/BAWAH")
+print("    - Kill Fog (kabut VD hilang, sky keliatan)")
+print("    - Brightness max 500")
+print("    - Clock Time slider")
+print("    - Teleport Menu (9 tombol)")
+print("    - FPS + Ping Auto ON")
 print("==========================================")
 print("")
 print("✅ [15/15] ALL SECTIONS COMPLETE!")
